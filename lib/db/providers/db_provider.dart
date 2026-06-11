@@ -84,3 +84,17 @@ class StudentNotifier extends AsyncNotifier<Student?> {
 
 final studentNotifierProvider =
     AsyncNotifierProvider<StudentNotifier, Student?>(StudentNotifier.new);
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+
+final earnedBadgesProvider = FutureProvider.family((ref, int studentId) {
+  final db = ref.watch(dbProvider);
+  return db.badgeDao.getBadgesForStudent(studentId);
+});
+
+// ── Projects ──────────────────────────────────────────────────────────────────
+
+final studentProjectsProvider = FutureProvider.family((ref, int studentId) {
+  final db = ref.watch(dbProvider);
+  return db.projectDao.getProjectsForStudent(studentId);
+});

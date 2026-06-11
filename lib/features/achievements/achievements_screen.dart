@@ -1,21 +1,239 @@
 import 'package:flutter/material.dart';
-import '../../shared/widgets/screen_placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AchievementsScreen extends StatelessWidget {
+import '../../core/theme/app_colors.dart';
+import '../../db/otic_database.dart';
+import '../../db/providers/db_provider.dart';
+import '../../gamification/badge_definitions.dart';
+
+class AchievementsScreen extends ConsumerWidget {
   const AchievementsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final studentAsync = ref.watch(activeStudentProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Achievements')),
-      body: const ScreenPlaceholder(
-        icon: Icons.emoji_events,
-        color: Color(0xFFF59E0B),
-        title: 'Your Achievements',
-        description:
-            'Points, badges, skill levels, streaks, and milestones earned on your learning journey. '
-            'Every step forward is recognized.',
+      body: studentAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e')),
+        data: (student) {
+          if (student == null) {
+            return const Center(child: Text('No student profile found.'));
+          }
+          return _AchievementsBody(studentId: student.id, student: student);
+        },
       ),
     );
+  }
+}
+
+class _AchievementsBody extends ConsumerWidget {
+  const _AchievementsBody({required this.studentId, required this.student});
+  final int studentId;
+  final Student student;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final badgesAsync = ref.watch(earnedBadgesProvider(studentId));
+
+    return badgesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (earned) {
+        final earnedIds = earned.map((b) => b.badgeId).toSet();
+        final earnedCount = earnedIds.length;
+
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: _StatsHeader(
+                student: student,
+                earned: earnedCount,
+                total: allBadges.length,
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+              sliver: SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (_, i) {
+                    final def = allBadges[i];
+                    final isEarned = earnedIds.contains(def.id);
+                    return _BadgeTile(
+                        def: def,
+                        isEarned: isEarned,
+                        earnedAt: isEarned
+                            ? earned
+                                .firstWhere((b) => b.badgeId == def.id)
+                                .earnedAt
+                            : null);
+                  },
+                  childCount: allBadges.length,
+                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 1.05,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _StatsHeader extends StatelessWidget {
+  const _StatsHeader(
+      {required this.student, required this.earned, required this.total});
+  final Student student;
+  final int earned;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(student.name,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18)),
+                const SizedBox(height: 4),
+                Text('$earned of $total badges earned',
+                    style: const TextStyle(
+                        color: Colors.white70, fontSize: 13)),
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: total > 0 ? earned / total : 0,
+                    minHeight: 7,
+                    backgroundColor: Colors.white24,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 20),
+          Column(
+            children: [
+              const Icon(Icons.stars, color: Colors.amber, size: 28),
+              const SizedBox(height: 4),
+              Text('${student.totalPoints}',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 22)),
+              const Text('points',
+                  style: TextStyle(color: Colors.white70, fontSize: 11)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BadgeTile extends StatelessWidget {
+  const _BadgeTile(
+      {required this.def, required this.isEarned, this.earnedAt});
+  final BadgeDef def;
+  final bool isEarned;
+  final DateTime? earnedAt;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isEarned
+            ? def.color.withValues(alpha: 0.07)
+            : AppColors.surfaceVariant,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isEarned
+              ? def.color.withValues(alpha: 0.4)
+              : AppColors.border,
+        ),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            def.icon,
+            size: 36,
+            color: isEarned ? def.color : AppColors.textHint,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            def.name,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: isEarned ? def.color : AppColors.textHint,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            isEarned && earnedAt != null
+                ? _fmt(earnedAt!)
+                : def.description,
+            style: TextStyle(
+              fontSize: 11,
+              color: isEarned ? AppColors.textSecondary : AppColors.textHint,
+              fontStyle:
+                  isEarned ? FontStyle.normal : FontStyle.italic,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (isEarned) ...[
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: def.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text('+${def.points} pts',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: def.color)),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String _fmt(DateTime d) {
+    const m = ['Jan','Feb','Mar','Apr','May','Jun',
+                'Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '${m[d.month - 1]} ${d.day}, ${d.year}';
   }
 }

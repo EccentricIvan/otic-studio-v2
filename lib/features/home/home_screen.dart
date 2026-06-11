@@ -174,7 +174,7 @@ class _LearningModesGrid extends StatelessWidget {
       const _Mode('Learn', 'Understand concepts with your AI mentor', Icons.menu_book, AppColors.learnColor, '/learn'),
       const _Mode('Practice', 'Reinforce knowledge with exercises', Icons.edit, AppColors.practiceColor, '/practice'),
       const _Mode('Create', 'Build real projects and solutions', Icons.lightbulb, AppColors.createColor, '/create'),
-      const _Mode('Teach', 'Achieve mastery by teaching OTIC', Icons.record_voice_over, AppColors.teachColor, '/learn'),
+      const _Mode('Teach', 'Achieve mastery by teaching OTIC', Icons.record_voice_over, AppColors.teachColor, '/teach'),
     ];
 
     return LayoutBuilder(

@@ -17,6 +17,10 @@ class Students extends Table {
   TextColumn get strengthsJson => text().withDefault(const Constant('[]'))();
   TextColumn get weaknessesJson => text().withDefault(const Constant('[]'))();
   TextColumn get goalsJson => text().withDefault(const Constant('[]'))();
+  // Gamification
+  IntColumn get streakDays => integer().withDefault(const Constant(0))();
+  DateTimeColumn get lastStreakDate => dateTime().nullable()();
+  IntColumn get totalPoints => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt =>
       dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get lastActiveAt =>

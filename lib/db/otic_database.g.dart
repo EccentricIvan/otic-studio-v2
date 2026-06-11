@@ -80,6 +80,28 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant('[]'));
+  static const VerificationMeta _streakDaysMeta =
+      const VerificationMeta('streakDays');
+  @override
+  late final GeneratedColumn<int> streakDays = GeneratedColumn<int>(
+      'streak_days', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _lastStreakDateMeta =
+      const VerificationMeta('lastStreakDate');
+  @override
+  late final GeneratedColumn<DateTime> lastStreakDate =
+      GeneratedColumn<DateTime>('last_streak_date', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _totalPointsMeta =
+      const VerificationMeta('totalPoints');
+  @override
+  late final GeneratedColumn<int> totalPoints = GeneratedColumn<int>(
+      'total_points', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -108,6 +130,9 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
         strengthsJson,
         weaknessesJson,
         goalsJson,
+        streakDays,
+        lastStreakDate,
+        totalPoints,
         createdAt,
         lastActiveAt
       ];
@@ -170,6 +195,24 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
       context.handle(_goalsJsonMeta,
           goalsJson.isAcceptableOrUnknown(data['goals_json']!, _goalsJsonMeta));
     }
+    if (data.containsKey('streak_days')) {
+      context.handle(
+          _streakDaysMeta,
+          streakDays.isAcceptableOrUnknown(
+              data['streak_days']!, _streakDaysMeta));
+    }
+    if (data.containsKey('last_streak_date')) {
+      context.handle(
+          _lastStreakDateMeta,
+          lastStreakDate.isAcceptableOrUnknown(
+              data['last_streak_date']!, _lastStreakDateMeta));
+    }
+    if (data.containsKey('total_points')) {
+      context.handle(
+          _totalPointsMeta,
+          totalPoints.isAcceptableOrUnknown(
+              data['total_points']!, _totalPointsMeta));
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -209,6 +252,12 @@ class $StudentsTable extends Students with TableInfo<$StudentsTable, Student> {
           DriftSqlType.string, data['${effectivePrefix}weaknesses_json'])!,
       goalsJson: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}goals_json'])!,
+      streakDays: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}streak_days'])!,
+      lastStreakDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_streak_date']),
+      totalPoints: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_points'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       lastActiveAt: attachedDatabase.typeMapping.read(
@@ -233,6 +282,9 @@ class Student extends DataClass implements Insertable<Student> {
   final String strengthsJson;
   final String weaknessesJson;
   final String goalsJson;
+  final int streakDays;
+  final DateTime? lastStreakDate;
+  final int totalPoints;
   final DateTime createdAt;
   final DateTime lastActiveAt;
   const Student(
@@ -246,6 +298,9 @@ class Student extends DataClass implements Insertable<Student> {
       required this.strengthsJson,
       required this.weaknessesJson,
       required this.goalsJson,
+      required this.streakDays,
+      this.lastStreakDate,
+      required this.totalPoints,
       required this.createdAt,
       required this.lastActiveAt});
   @override
@@ -265,6 +320,11 @@ class Student extends DataClass implements Insertable<Student> {
     map['strengths_json'] = Variable<String>(strengthsJson);
     map['weaknesses_json'] = Variable<String>(weaknessesJson);
     map['goals_json'] = Variable<String>(goalsJson);
+    map['streak_days'] = Variable<int>(streakDays);
+    if (!nullToAbsent || lastStreakDate != null) {
+      map['last_streak_date'] = Variable<DateTime>(lastStreakDate);
+    }
+    map['total_points'] = Variable<int>(totalPoints);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['last_active_at'] = Variable<DateTime>(lastActiveAt);
     return map;
@@ -283,6 +343,11 @@ class Student extends DataClass implements Insertable<Student> {
       strengthsJson: Value(strengthsJson),
       weaknessesJson: Value(weaknessesJson),
       goalsJson: Value(goalsJson),
+      streakDays: Value(streakDays),
+      lastStreakDate: lastStreakDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastStreakDate),
+      totalPoints: Value(totalPoints),
       createdAt: Value(createdAt),
       lastActiveAt: Value(lastActiveAt),
     );
@@ -302,6 +367,9 @@ class Student extends DataClass implements Insertable<Student> {
       strengthsJson: serializer.fromJson<String>(json['strengthsJson']),
       weaknessesJson: serializer.fromJson<String>(json['weaknessesJson']),
       goalsJson: serializer.fromJson<String>(json['goalsJson']),
+      streakDays: serializer.fromJson<int>(json['streakDays']),
+      lastStreakDate: serializer.fromJson<DateTime?>(json['lastStreakDate']),
+      totalPoints: serializer.fromJson<int>(json['totalPoints']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       lastActiveAt: serializer.fromJson<DateTime>(json['lastActiveAt']),
     );
@@ -320,6 +388,9 @@ class Student extends DataClass implements Insertable<Student> {
       'strengthsJson': serializer.toJson<String>(strengthsJson),
       'weaknessesJson': serializer.toJson<String>(weaknessesJson),
       'goalsJson': serializer.toJson<String>(goalsJson),
+      'streakDays': serializer.toJson<int>(streakDays),
+      'lastStreakDate': serializer.toJson<DateTime?>(lastStreakDate),
+      'totalPoints': serializer.toJson<int>(totalPoints),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'lastActiveAt': serializer.toJson<DateTime>(lastActiveAt),
     };
@@ -336,6 +407,9 @@ class Student extends DataClass implements Insertable<Student> {
           String? strengthsJson,
           String? weaknessesJson,
           String? goalsJson,
+          int? streakDays,
+          Value<DateTime?> lastStreakDate = const Value.absent(),
+          int? totalPoints,
           DateTime? createdAt,
           DateTime? lastActiveAt}) =>
       Student(
@@ -349,6 +423,10 @@ class Student extends DataClass implements Insertable<Student> {
         strengthsJson: strengthsJson ?? this.strengthsJson,
         weaknessesJson: weaknessesJson ?? this.weaknessesJson,
         goalsJson: goalsJson ?? this.goalsJson,
+        streakDays: streakDays ?? this.streakDays,
+        lastStreakDate:
+            lastStreakDate.present ? lastStreakDate.value : this.lastStreakDate,
+        totalPoints: totalPoints ?? this.totalPoints,
         createdAt: createdAt ?? this.createdAt,
         lastActiveAt: lastActiveAt ?? this.lastActiveAt,
       );
@@ -372,6 +450,13 @@ class Student extends DataClass implements Insertable<Student> {
           ? data.weaknessesJson.value
           : this.weaknessesJson,
       goalsJson: data.goalsJson.present ? data.goalsJson.value : this.goalsJson,
+      streakDays:
+          data.streakDays.present ? data.streakDays.value : this.streakDays,
+      lastStreakDate: data.lastStreakDate.present
+          ? data.lastStreakDate.value
+          : this.lastStreakDate,
+      totalPoints:
+          data.totalPoints.present ? data.totalPoints.value : this.totalPoints,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       lastActiveAt: data.lastActiveAt.present
           ? data.lastActiveAt.value
@@ -392,6 +477,9 @@ class Student extends DataClass implements Insertable<Student> {
           ..write('strengthsJson: $strengthsJson, ')
           ..write('weaknessesJson: $weaknessesJson, ')
           ..write('goalsJson: $goalsJson, ')
+          ..write('streakDays: $streakDays, ')
+          ..write('lastStreakDate: $lastStreakDate, ')
+          ..write('totalPoints: $totalPoints, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastActiveAt: $lastActiveAt')
           ..write(')'))
@@ -410,6 +498,9 @@ class Student extends DataClass implements Insertable<Student> {
       strengthsJson,
       weaknessesJson,
       goalsJson,
+      streakDays,
+      lastStreakDate,
+      totalPoints,
       createdAt,
       lastActiveAt);
   @override
@@ -426,6 +517,9 @@ class Student extends DataClass implements Insertable<Student> {
           other.strengthsJson == this.strengthsJson &&
           other.weaknessesJson == this.weaknessesJson &&
           other.goalsJson == this.goalsJson &&
+          other.streakDays == this.streakDays &&
+          other.lastStreakDate == this.lastStreakDate &&
+          other.totalPoints == this.totalPoints &&
           other.createdAt == this.createdAt &&
           other.lastActiveAt == this.lastActiveAt);
 }
@@ -441,6 +535,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
   final Value<String> strengthsJson;
   final Value<String> weaknessesJson;
   final Value<String> goalsJson;
+  final Value<int> streakDays;
+  final Value<DateTime?> lastStreakDate;
+  final Value<int> totalPoints;
   final Value<DateTime> createdAt;
   final Value<DateTime> lastActiveAt;
   const StudentsCompanion({
@@ -454,6 +551,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
     this.strengthsJson = const Value.absent(),
     this.weaknessesJson = const Value.absent(),
     this.goalsJson = const Value.absent(),
+    this.streakDays = const Value.absent(),
+    this.lastStreakDate = const Value.absent(),
+    this.totalPoints = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastActiveAt = const Value.absent(),
   });
@@ -468,6 +568,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
     this.strengthsJson = const Value.absent(),
     this.weaknessesJson = const Value.absent(),
     this.goalsJson = const Value.absent(),
+    this.streakDays = const Value.absent(),
+    this.lastStreakDate = const Value.absent(),
+    this.totalPoints = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastActiveAt = const Value.absent(),
   }) : name = Value(name);
@@ -482,6 +585,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
     Expression<String>? strengthsJson,
     Expression<String>? weaknessesJson,
     Expression<String>? goalsJson,
+    Expression<int>? streakDays,
+    Expression<DateTime>? lastStreakDate,
+    Expression<int>? totalPoints,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? lastActiveAt,
   }) {
@@ -496,6 +602,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
       if (strengthsJson != null) 'strengths_json': strengthsJson,
       if (weaknessesJson != null) 'weaknesses_json': weaknessesJson,
       if (goalsJson != null) 'goals_json': goalsJson,
+      if (streakDays != null) 'streak_days': streakDays,
+      if (lastStreakDate != null) 'last_streak_date': lastStreakDate,
+      if (totalPoints != null) 'total_points': totalPoints,
       if (createdAt != null) 'created_at': createdAt,
       if (lastActiveAt != null) 'last_active_at': lastActiveAt,
     });
@@ -512,6 +621,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
       Value<String>? strengthsJson,
       Value<String>? weaknessesJson,
       Value<String>? goalsJson,
+      Value<int>? streakDays,
+      Value<DateTime?>? lastStreakDate,
+      Value<int>? totalPoints,
       Value<DateTime>? createdAt,
       Value<DateTime>? lastActiveAt}) {
     return StudentsCompanion(
@@ -525,6 +637,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
       strengthsJson: strengthsJson ?? this.strengthsJson,
       weaknessesJson: weaknessesJson ?? this.weaknessesJson,
       goalsJson: goalsJson ?? this.goalsJson,
+      streakDays: streakDays ?? this.streakDays,
+      lastStreakDate: lastStreakDate ?? this.lastStreakDate,
+      totalPoints: totalPoints ?? this.totalPoints,
       createdAt: createdAt ?? this.createdAt,
       lastActiveAt: lastActiveAt ?? this.lastActiveAt,
     );
@@ -563,6 +678,15 @@ class StudentsCompanion extends UpdateCompanion<Student> {
     if (goalsJson.present) {
       map['goals_json'] = Variable<String>(goalsJson.value);
     }
+    if (streakDays.present) {
+      map['streak_days'] = Variable<int>(streakDays.value);
+    }
+    if (lastStreakDate.present) {
+      map['last_streak_date'] = Variable<DateTime>(lastStreakDate.value);
+    }
+    if (totalPoints.present) {
+      map['total_points'] = Variable<int>(totalPoints.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -585,6 +709,9 @@ class StudentsCompanion extends UpdateCompanion<Student> {
           ..write('strengthsJson: $strengthsJson, ')
           ..write('weaknessesJson: $weaknessesJson, ')
           ..write('goalsJson: $goalsJson, ')
+          ..write('streakDays: $streakDays, ')
+          ..write('lastStreakDate: $lastStreakDate, ')
+          ..write('totalPoints: $totalPoints, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastActiveAt: $lastActiveAt')
           ..write(')'))
@@ -2015,6 +2142,767 @@ class LearningPathsCompanion extends UpdateCompanion<LearningPath> {
   }
 }
 
+class $EarnedBadgesTable extends EarnedBadges
+    with TableInfo<$EarnedBadgesTable, EarnedBadge> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EarnedBadgesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _studentIdMeta =
+      const VerificationMeta('studentId');
+  @override
+  late final GeneratedColumn<int> studentId = GeneratedColumn<int>(
+      'student_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES students (id) ON DELETE CASCADE'));
+  static const VerificationMeta _badgeIdMeta =
+      const VerificationMeta('badgeId');
+  @override
+  late final GeneratedColumn<String> badgeId = GeneratedColumn<String>(
+      'badge_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _badgeNameMeta =
+      const VerificationMeta('badgeName');
+  @override
+  late final GeneratedColumn<String> badgeName = GeneratedColumn<String>(
+      'badge_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _earnedAtMeta =
+      const VerificationMeta('earnedAt');
+  @override
+  late final GeneratedColumn<DateTime> earnedAt = GeneratedColumn<DateTime>(
+      'earned_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, studentId, badgeId, badgeName, earnedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'earned_badges';
+  @override
+  VerificationContext validateIntegrity(Insertable<EarnedBadge> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(_studentIdMeta,
+          studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta));
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('badge_id')) {
+      context.handle(_badgeIdMeta,
+          badgeId.isAcceptableOrUnknown(data['badge_id']!, _badgeIdMeta));
+    } else if (isInserting) {
+      context.missing(_badgeIdMeta);
+    }
+    if (data.containsKey('badge_name')) {
+      context.handle(_badgeNameMeta,
+          badgeName.isAcceptableOrUnknown(data['badge_name']!, _badgeNameMeta));
+    } else if (isInserting) {
+      context.missing(_badgeNameMeta);
+    }
+    if (data.containsKey('earned_at')) {
+      context.handle(_earnedAtMeta,
+          earnedAt.isAcceptableOrUnknown(data['earned_at']!, _earnedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {studentId, badgeId},
+      ];
+  @override
+  EarnedBadge map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return EarnedBadge(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      studentId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}student_id'])!,
+      badgeId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}badge_id'])!,
+      badgeName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}badge_name'])!,
+      earnedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}earned_at'])!,
+    );
+  }
+
+  @override
+  $EarnedBadgesTable createAlias(String alias) {
+    return $EarnedBadgesTable(attachedDatabase, alias);
+  }
+}
+
+class EarnedBadge extends DataClass implements Insertable<EarnedBadge> {
+  final int id;
+  final int studentId;
+  final String badgeId;
+  final String badgeName;
+  final DateTime earnedAt;
+  const EarnedBadge(
+      {required this.id,
+      required this.studentId,
+      required this.badgeId,
+      required this.badgeName,
+      required this.earnedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['student_id'] = Variable<int>(studentId);
+    map['badge_id'] = Variable<String>(badgeId);
+    map['badge_name'] = Variable<String>(badgeName);
+    map['earned_at'] = Variable<DateTime>(earnedAt);
+    return map;
+  }
+
+  EarnedBadgesCompanion toCompanion(bool nullToAbsent) {
+    return EarnedBadgesCompanion(
+      id: Value(id),
+      studentId: Value(studentId),
+      badgeId: Value(badgeId),
+      badgeName: Value(badgeName),
+      earnedAt: Value(earnedAt),
+    );
+  }
+
+  factory EarnedBadge.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EarnedBadge(
+      id: serializer.fromJson<int>(json['id']),
+      studentId: serializer.fromJson<int>(json['studentId']),
+      badgeId: serializer.fromJson<String>(json['badgeId']),
+      badgeName: serializer.fromJson<String>(json['badgeName']),
+      earnedAt: serializer.fromJson<DateTime>(json['earnedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'studentId': serializer.toJson<int>(studentId),
+      'badgeId': serializer.toJson<String>(badgeId),
+      'badgeName': serializer.toJson<String>(badgeName),
+      'earnedAt': serializer.toJson<DateTime>(earnedAt),
+    };
+  }
+
+  EarnedBadge copyWith(
+          {int? id,
+          int? studentId,
+          String? badgeId,
+          String? badgeName,
+          DateTime? earnedAt}) =>
+      EarnedBadge(
+        id: id ?? this.id,
+        studentId: studentId ?? this.studentId,
+        badgeId: badgeId ?? this.badgeId,
+        badgeName: badgeName ?? this.badgeName,
+        earnedAt: earnedAt ?? this.earnedAt,
+      );
+  EarnedBadge copyWithCompanion(EarnedBadgesCompanion data) {
+    return EarnedBadge(
+      id: data.id.present ? data.id.value : this.id,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      badgeId: data.badgeId.present ? data.badgeId.value : this.badgeId,
+      badgeName: data.badgeName.present ? data.badgeName.value : this.badgeName,
+      earnedAt: data.earnedAt.present ? data.earnedAt.value : this.earnedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EarnedBadge(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('badgeId: $badgeId, ')
+          ..write('badgeName: $badgeName, ')
+          ..write('earnedAt: $earnedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, studentId, badgeId, badgeName, earnedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EarnedBadge &&
+          other.id == this.id &&
+          other.studentId == this.studentId &&
+          other.badgeId == this.badgeId &&
+          other.badgeName == this.badgeName &&
+          other.earnedAt == this.earnedAt);
+}
+
+class EarnedBadgesCompanion extends UpdateCompanion<EarnedBadge> {
+  final Value<int> id;
+  final Value<int> studentId;
+  final Value<String> badgeId;
+  final Value<String> badgeName;
+  final Value<DateTime> earnedAt;
+  const EarnedBadgesCompanion({
+    this.id = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.badgeId = const Value.absent(),
+    this.badgeName = const Value.absent(),
+    this.earnedAt = const Value.absent(),
+  });
+  EarnedBadgesCompanion.insert({
+    this.id = const Value.absent(),
+    required int studentId,
+    required String badgeId,
+    required String badgeName,
+    this.earnedAt = const Value.absent(),
+  })  : studentId = Value(studentId),
+        badgeId = Value(badgeId),
+        badgeName = Value(badgeName);
+  static Insertable<EarnedBadge> custom({
+    Expression<int>? id,
+    Expression<int>? studentId,
+    Expression<String>? badgeId,
+    Expression<String>? badgeName,
+    Expression<DateTime>? earnedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (studentId != null) 'student_id': studentId,
+      if (badgeId != null) 'badge_id': badgeId,
+      if (badgeName != null) 'badge_name': badgeName,
+      if (earnedAt != null) 'earned_at': earnedAt,
+    });
+  }
+
+  EarnedBadgesCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? studentId,
+      Value<String>? badgeId,
+      Value<String>? badgeName,
+      Value<DateTime>? earnedAt}) {
+    return EarnedBadgesCompanion(
+      id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
+      badgeId: badgeId ?? this.badgeId,
+      badgeName: badgeName ?? this.badgeName,
+      earnedAt: earnedAt ?? this.earnedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<int>(studentId.value);
+    }
+    if (badgeId.present) {
+      map['badge_id'] = Variable<String>(badgeId.value);
+    }
+    if (badgeName.present) {
+      map['badge_name'] = Variable<String>(badgeName.value);
+    }
+    if (earnedAt.present) {
+      map['earned_at'] = Variable<DateTime>(earnedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EarnedBadgesCompanion(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('badgeId: $badgeId, ')
+          ..write('badgeName: $badgeName, ')
+          ..write('earnedAt: $earnedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudentProjectsTable extends StudentProjects
+    with TableInfo<$StudentProjectsTable, StudentProject> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudentProjectsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _studentIdMeta =
+      const VerificationMeta('studentId');
+  @override
+  late final GeneratedColumn<int> studentId = GeneratedColumn<int>(
+      'student_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES students (id) ON DELETE CASCADE'));
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _topicMeta = const VerificationMeta('topic');
+  @override
+  late final GeneratedColumn<String> topic = GeneratedColumn<String>(
+      'topic', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _projectTypeMeta =
+      const VerificationMeta('projectType');
+  @override
+  late final GeneratedColumn<String> projectType = GeneratedColumn<String>(
+      'project_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _stepsJsonMeta =
+      const VerificationMeta('stepsJson');
+  @override
+  late final GeneratedColumn<String> stepsJson = GeneratedColumn<String>(
+      'steps_json', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('[]'));
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('in_progress'));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        studentId,
+        title,
+        topic,
+        projectType,
+        stepsJson,
+        status,
+        createdAt,
+        updatedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'student_projects';
+  @override
+  VerificationContext validateIntegrity(Insertable<StudentProject> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(_studentIdMeta,
+          studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta));
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('topic')) {
+      context.handle(
+          _topicMeta, topic.isAcceptableOrUnknown(data['topic']!, _topicMeta));
+    } else if (isInserting) {
+      context.missing(_topicMeta);
+    }
+    if (data.containsKey('project_type')) {
+      context.handle(
+          _projectTypeMeta,
+          projectType.isAcceptableOrUnknown(
+              data['project_type']!, _projectTypeMeta));
+    } else if (isInserting) {
+      context.missing(_projectTypeMeta);
+    }
+    if (data.containsKey('steps_json')) {
+      context.handle(_stepsJsonMeta,
+          stepsJson.isAcceptableOrUnknown(data['steps_json']!, _stepsJsonMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  StudentProject map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudentProject(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      studentId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}student_id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      topic: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}topic'])!,
+      projectType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_type'])!,
+      stepsJson: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}steps_json'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $StudentProjectsTable createAlias(String alias) {
+    return $StudentProjectsTable(attachedDatabase, alias);
+  }
+}
+
+class StudentProject extends DataClass implements Insertable<StudentProject> {
+  final int id;
+  final int studentId;
+  final String title;
+  final String topic;
+  final String projectType;
+  final String stepsJson;
+  final String status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const StudentProject(
+      {required this.id,
+      required this.studentId,
+      required this.title,
+      required this.topic,
+      required this.projectType,
+      required this.stepsJson,
+      required this.status,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['student_id'] = Variable<int>(studentId);
+    map['title'] = Variable<String>(title);
+    map['topic'] = Variable<String>(topic);
+    map['project_type'] = Variable<String>(projectType);
+    map['steps_json'] = Variable<String>(stepsJson);
+    map['status'] = Variable<String>(status);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  StudentProjectsCompanion toCompanion(bool nullToAbsent) {
+    return StudentProjectsCompanion(
+      id: Value(id),
+      studentId: Value(studentId),
+      title: Value(title),
+      topic: Value(topic),
+      projectType: Value(projectType),
+      stepsJson: Value(stepsJson),
+      status: Value(status),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory StudentProject.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudentProject(
+      id: serializer.fromJson<int>(json['id']),
+      studentId: serializer.fromJson<int>(json['studentId']),
+      title: serializer.fromJson<String>(json['title']),
+      topic: serializer.fromJson<String>(json['topic']),
+      projectType: serializer.fromJson<String>(json['projectType']),
+      stepsJson: serializer.fromJson<String>(json['stepsJson']),
+      status: serializer.fromJson<String>(json['status']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'studentId': serializer.toJson<int>(studentId),
+      'title': serializer.toJson<String>(title),
+      'topic': serializer.toJson<String>(topic),
+      'projectType': serializer.toJson<String>(projectType),
+      'stepsJson': serializer.toJson<String>(stepsJson),
+      'status': serializer.toJson<String>(status),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  StudentProject copyWith(
+          {int? id,
+          int? studentId,
+          String? title,
+          String? topic,
+          String? projectType,
+          String? stepsJson,
+          String? status,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      StudentProject(
+        id: id ?? this.id,
+        studentId: studentId ?? this.studentId,
+        title: title ?? this.title,
+        topic: topic ?? this.topic,
+        projectType: projectType ?? this.projectType,
+        stepsJson: stepsJson ?? this.stepsJson,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  StudentProject copyWithCompanion(StudentProjectsCompanion data) {
+    return StudentProject(
+      id: data.id.present ? data.id.value : this.id,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      title: data.title.present ? data.title.value : this.title,
+      topic: data.topic.present ? data.topic.value : this.topic,
+      projectType:
+          data.projectType.present ? data.projectType.value : this.projectType,
+      stepsJson: data.stepsJson.present ? data.stepsJson.value : this.stepsJson,
+      status: data.status.present ? data.status.value : this.status,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudentProject(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('title: $title, ')
+          ..write('topic: $topic, ')
+          ..write('projectType: $projectType, ')
+          ..write('stepsJson: $stepsJson, ')
+          ..write('status: $status, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, studentId, title, topic, projectType,
+      stepsJson, status, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudentProject &&
+          other.id == this.id &&
+          other.studentId == this.studentId &&
+          other.title == this.title &&
+          other.topic == this.topic &&
+          other.projectType == this.projectType &&
+          other.stepsJson == this.stepsJson &&
+          other.status == this.status &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class StudentProjectsCompanion extends UpdateCompanion<StudentProject> {
+  final Value<int> id;
+  final Value<int> studentId;
+  final Value<String> title;
+  final Value<String> topic;
+  final Value<String> projectType;
+  final Value<String> stepsJson;
+  final Value<String> status;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const StudentProjectsCompanion({
+    this.id = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.topic = const Value.absent(),
+    this.projectType = const Value.absent(),
+    this.stepsJson = const Value.absent(),
+    this.status = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  StudentProjectsCompanion.insert({
+    this.id = const Value.absent(),
+    required int studentId,
+    required String title,
+    required String topic,
+    required String projectType,
+    this.stepsJson = const Value.absent(),
+    this.status = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  })  : studentId = Value(studentId),
+        title = Value(title),
+        topic = Value(topic),
+        projectType = Value(projectType);
+  static Insertable<StudentProject> custom({
+    Expression<int>? id,
+    Expression<int>? studentId,
+    Expression<String>? title,
+    Expression<String>? topic,
+    Expression<String>? projectType,
+    Expression<String>? stepsJson,
+    Expression<String>? status,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (studentId != null) 'student_id': studentId,
+      if (title != null) 'title': title,
+      if (topic != null) 'topic': topic,
+      if (projectType != null) 'project_type': projectType,
+      if (stepsJson != null) 'steps_json': stepsJson,
+      if (status != null) 'status': status,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  StudentProjectsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? studentId,
+      Value<String>? title,
+      Value<String>? topic,
+      Value<String>? projectType,
+      Value<String>? stepsJson,
+      Value<String>? status,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
+    return StudentProjectsCompanion(
+      id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
+      title: title ?? this.title,
+      topic: topic ?? this.topic,
+      projectType: projectType ?? this.projectType,
+      stepsJson: stepsJson ?? this.stepsJson,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<int>(studentId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (topic.present) {
+      map['topic'] = Variable<String>(topic.value);
+    }
+    if (projectType.present) {
+      map['project_type'] = Variable<String>(projectType.value);
+    }
+    if (stepsJson.present) {
+      map['steps_json'] = Variable<String>(stepsJson.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudentProjectsCompanion(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('title: $title, ')
+          ..write('topic: $topic, ')
+          ..write('projectType: $projectType, ')
+          ..write('stepsJson: $stepsJson, ')
+          ..write('status: $status, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$OticDatabase extends GeneratedDatabase {
   _$OticDatabase(QueryExecutor e) : super(e);
   $OticDatabaseManager get managers => $OticDatabaseManager(this);
@@ -2023,15 +2911,26 @@ abstract class _$OticDatabase extends GeneratedDatabase {
       $SessionSummariesTable(this);
   late final $TopicProgressTable topicProgress = $TopicProgressTable(this);
   late final $LearningPathsTable learningPaths = $LearningPathsTable(this);
+  late final $EarnedBadgesTable earnedBadges = $EarnedBadgesTable(this);
+  late final $StudentProjectsTable studentProjects =
+      $StudentProjectsTable(this);
   late final StudentDao studentDao = StudentDao(this as OticDatabase);
   late final SessionDao sessionDao = SessionDao(this as OticDatabase);
   late final PathDao pathDao = PathDao(this as OticDatabase);
+  late final BadgeDao badgeDao = BadgeDao(this as OticDatabase);
+  late final ProjectDao projectDao = ProjectDao(this as OticDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [students, sessionSummaries, topicProgress, learningPaths];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        students,
+        sessionSummaries,
+        topicProgress,
+        learningPaths,
+        earnedBadges,
+        studentProjects
+      ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -2056,6 +2955,20 @@ abstract class _$OticDatabase extends GeneratedDatabase {
               TableUpdate('learning_paths', kind: UpdateKind.delete),
             ],
           ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('students',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('earned_badges', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('students',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('student_projects', kind: UpdateKind.delete),
+            ],
+          ),
         ],
       );
 }
@@ -2071,6 +2984,9 @@ typedef $$StudentsTableCreateCompanionBuilder = StudentsCompanion Function({
   Value<String> strengthsJson,
   Value<String> weaknessesJson,
   Value<String> goalsJson,
+  Value<int> streakDays,
+  Value<DateTime?> lastStreakDate,
+  Value<int> totalPoints,
   Value<DateTime> createdAt,
   Value<DateTime> lastActiveAt,
 });
@@ -2085,6 +3001,9 @@ typedef $$StudentsTableUpdateCompanionBuilder = StudentsCompanion Function({
   Value<String> strengthsJson,
   Value<String> weaknessesJson,
   Value<String> goalsJson,
+  Value<int> streakDays,
+  Value<DateTime?> lastStreakDate,
+  Value<int> totalPoints,
   Value<DateTime> createdAt,
   Value<DateTime> lastActiveAt,
 });
@@ -2139,6 +3058,38 @@ final class $$StudentsTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$EarnedBadgesTable, List<EarnedBadge>>
+      _earnedBadgesRefsTable(_$OticDatabase db) =>
+          MultiTypedResultKey.fromTable(db.earnedBadges,
+              aliasName: $_aliasNameGenerator(
+                  db.students.id, db.earnedBadges.studentId));
+
+  $$EarnedBadgesTableProcessedTableManager get earnedBadgesRefs {
+    final manager = $$EarnedBadgesTableTableManager($_db, $_db.earnedBadges)
+        .filter((f) => f.studentId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_earnedBadgesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$StudentProjectsTable, List<StudentProject>>
+      _studentProjectsRefsTable(_$OticDatabase db) =>
+          MultiTypedResultKey.fromTable(db.studentProjects,
+              aliasName: $_aliasNameGenerator(
+                  db.students.id, db.studentProjects.studentId));
+
+  $$StudentProjectsTableProcessedTableManager get studentProjectsRefs {
+    final manager =
+        $$StudentProjectsTableTableManager($_db, $_db.studentProjects)
+            .filter((f) => f.studentId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_studentProjectsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$StudentsTableFilterComposer
@@ -2180,6 +3131,16 @@ class $$StudentsTableFilterComposer
 
   ColumnFilters<String> get goalsJson => $composableBuilder(
       column: $table.goalsJson, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get streakDays => $composableBuilder(
+      column: $table.streakDays, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastStreakDate => $composableBuilder(
+      column: $table.lastStreakDate,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get totalPoints => $composableBuilder(
+      column: $table.totalPoints, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -2249,6 +3210,48 @@ class $$StudentsTableFilterComposer
             ));
     return f(composer);
   }
+
+  Expression<bool> earnedBadgesRefs(
+      Expression<bool> Function($$EarnedBadgesTableFilterComposer f) f) {
+    final $$EarnedBadgesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.earnedBadges,
+        getReferencedColumn: (t) => t.studentId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EarnedBadgesTableFilterComposer(
+              $db: $db,
+              $table: $db.earnedBadges,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> studentProjectsRefs(
+      Expression<bool> Function($$StudentProjectsTableFilterComposer f) f) {
+    final $$StudentProjectsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.studentProjects,
+        getReferencedColumn: (t) => t.studentId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentProjectsTableFilterComposer(
+              $db: $db,
+              $table: $db.studentProjects,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$StudentsTableOrderingComposer
@@ -2293,6 +3296,16 @@ class $$StudentsTableOrderingComposer
 
   ColumnOrderings<String> get goalsJson => $composableBuilder(
       column: $table.goalsJson, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get streakDays => $composableBuilder(
+      column: $table.streakDays, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastStreakDate => $composableBuilder(
+      column: $table.lastStreakDate,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get totalPoints => $composableBuilder(
+      column: $table.totalPoints, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
@@ -2340,6 +3353,15 @@ class $$StudentsTableAnnotationComposer
 
   GeneratedColumn<String> get goalsJson =>
       $composableBuilder(column: $table.goalsJson, builder: (column) => column);
+
+  GeneratedColumn<int> get streakDays => $composableBuilder(
+      column: $table.streakDays, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastStreakDate => $composableBuilder(
+      column: $table.lastStreakDate, builder: (column) => column);
+
+  GeneratedColumn<int> get totalPoints => $composableBuilder(
+      column: $table.totalPoints, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2409,6 +3431,48 @@ class $$StudentsTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> earnedBadgesRefs<T extends Object>(
+      Expression<T> Function($$EarnedBadgesTableAnnotationComposer a) f) {
+    final $$EarnedBadgesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.earnedBadges,
+        getReferencedColumn: (t) => t.studentId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$EarnedBadgesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.earnedBadges,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> studentProjectsRefs<T extends Object>(
+      Expression<T> Function($$StudentProjectsTableAnnotationComposer a) f) {
+    final $$StudentProjectsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.studentProjects,
+        getReferencedColumn: (t) => t.studentId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentProjectsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.studentProjects,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$StudentsTableTableManager extends RootTableManager<
@@ -2425,7 +3489,9 @@ class $$StudentsTableTableManager extends RootTableManager<
     PrefetchHooks Function(
         {bool sessionSummariesRefs,
         bool topicProgressRefs,
-        bool learningPathsRefs})> {
+        bool learningPathsRefs,
+        bool earnedBadgesRefs,
+        bool studentProjectsRefs})> {
   $$StudentsTableTableManager(_$OticDatabase db, $StudentsTable table)
       : super(TableManagerState(
           db: db,
@@ -2447,6 +3513,9 @@ class $$StudentsTableTableManager extends RootTableManager<
             Value<String> strengthsJson = const Value.absent(),
             Value<String> weaknessesJson = const Value.absent(),
             Value<String> goalsJson = const Value.absent(),
+            Value<int> streakDays = const Value.absent(),
+            Value<DateTime?> lastStreakDate = const Value.absent(),
+            Value<int> totalPoints = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> lastActiveAt = const Value.absent(),
           }) =>
@@ -2461,6 +3530,9 @@ class $$StudentsTableTableManager extends RootTableManager<
             strengthsJson: strengthsJson,
             weaknessesJson: weaknessesJson,
             goalsJson: goalsJson,
+            streakDays: streakDays,
+            lastStreakDate: lastStreakDate,
+            totalPoints: totalPoints,
             createdAt: createdAt,
             lastActiveAt: lastActiveAt,
           ),
@@ -2475,6 +3547,9 @@ class $$StudentsTableTableManager extends RootTableManager<
             Value<String> strengthsJson = const Value.absent(),
             Value<String> weaknessesJson = const Value.absent(),
             Value<String> goalsJson = const Value.absent(),
+            Value<int> streakDays = const Value.absent(),
+            Value<DateTime?> lastStreakDate = const Value.absent(),
+            Value<int> totalPoints = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> lastActiveAt = const Value.absent(),
           }) =>
@@ -2489,6 +3564,9 @@ class $$StudentsTableTableManager extends RootTableManager<
             strengthsJson: strengthsJson,
             weaknessesJson: weaknessesJson,
             goalsJson: goalsJson,
+            streakDays: streakDays,
+            lastStreakDate: lastStreakDate,
+            totalPoints: totalPoints,
             createdAt: createdAt,
             lastActiveAt: lastActiveAt,
           ),
@@ -2499,13 +3577,17 @@ class $$StudentsTableTableManager extends RootTableManager<
           prefetchHooksCallback: (
               {sessionSummariesRefs = false,
               topicProgressRefs = false,
-              learningPathsRefs = false}) {
+              learningPathsRefs = false,
+              earnedBadgesRefs = false,
+              studentProjectsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (sessionSummariesRefs) db.sessionSummaries,
                 if (topicProgressRefs) db.topicProgress,
-                if (learningPathsRefs) db.learningPaths
+                if (learningPathsRefs) db.learningPaths,
+                if (earnedBadgesRefs) db.earnedBadges,
+                if (studentProjectsRefs) db.studentProjects
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -2548,6 +3630,32 @@ class $$StudentsTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.studentId == item.id),
+                        typedResults: items),
+                  if (earnedBadgesRefs)
+                    await $_getPrefetchedData<Student, $StudentsTable,
+                            EarnedBadge>(
+                        currentTable: table,
+                        referencedTable: $$StudentsTableReferences
+                            ._earnedBadgesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$StudentsTableReferences(db, table, p0)
+                                .earnedBadgesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.studentId == item.id),
+                        typedResults: items),
+                  if (studentProjectsRefs)
+                    await $_getPrefetchedData<Student, $StudentsTable,
+                            StudentProject>(
+                        currentTable: table,
+                        referencedTable: $$StudentsTableReferences
+                            ._studentProjectsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$StudentsTableReferences(db, table, p0)
+                                .studentProjectsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.studentId == item.id),
                         typedResults: items)
                 ];
               },
@@ -2570,7 +3678,9 @@ typedef $$StudentsTableProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function(
         {bool sessionSummariesRefs,
         bool topicProgressRefs,
-        bool learningPathsRefs})>;
+        bool learningPathsRefs,
+        bool earnedBadgesRefs,
+        bool studentProjectsRefs})>;
 typedef $$SessionSummariesTableCreateCompanionBuilder
     = SessionSummariesCompanion Function({
   Value<int> id,
@@ -3576,6 +4686,606 @@ typedef $$LearningPathsTableProcessedTableManager = ProcessedTableManager<
     (LearningPath, $$LearningPathsTableReferences),
     LearningPath,
     PrefetchHooks Function({bool studentId})>;
+typedef $$EarnedBadgesTableCreateCompanionBuilder = EarnedBadgesCompanion
+    Function({
+  Value<int> id,
+  required int studentId,
+  required String badgeId,
+  required String badgeName,
+  Value<DateTime> earnedAt,
+});
+typedef $$EarnedBadgesTableUpdateCompanionBuilder = EarnedBadgesCompanion
+    Function({
+  Value<int> id,
+  Value<int> studentId,
+  Value<String> badgeId,
+  Value<String> badgeName,
+  Value<DateTime> earnedAt,
+});
+
+final class $$EarnedBadgesTableReferences
+    extends BaseReferences<_$OticDatabase, $EarnedBadgesTable, EarnedBadge> {
+  $$EarnedBadgesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $StudentsTable _studentIdTable(_$OticDatabase db) =>
+      db.students.createAlias(
+          $_aliasNameGenerator(db.earnedBadges.studentId, db.students.id));
+
+  $$StudentsTableProcessedTableManager get studentId {
+    final $_column = $_itemColumn<int>('student_id')!;
+
+    final manager = $$StudentsTableTableManager($_db, $_db.students)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_studentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$EarnedBadgesTableFilterComposer
+    extends Composer<_$OticDatabase, $EarnedBadgesTable> {
+  $$EarnedBadgesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get badgeId => $composableBuilder(
+      column: $table.badgeId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get badgeName => $composableBuilder(
+      column: $table.badgeName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get earnedAt => $composableBuilder(
+      column: $table.earnedAt, builder: (column) => ColumnFilters(column));
+
+  $$StudentsTableFilterComposer get studentId {
+    final $$StudentsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableFilterComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$EarnedBadgesTableOrderingComposer
+    extends Composer<_$OticDatabase, $EarnedBadgesTable> {
+  $$EarnedBadgesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get badgeId => $composableBuilder(
+      column: $table.badgeId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get badgeName => $composableBuilder(
+      column: $table.badgeName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get earnedAt => $composableBuilder(
+      column: $table.earnedAt, builder: (column) => ColumnOrderings(column));
+
+  $$StudentsTableOrderingComposer get studentId {
+    final $$StudentsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableOrderingComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$EarnedBadgesTableAnnotationComposer
+    extends Composer<_$OticDatabase, $EarnedBadgesTable> {
+  $$EarnedBadgesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get badgeId =>
+      $composableBuilder(column: $table.badgeId, builder: (column) => column);
+
+  GeneratedColumn<String> get badgeName =>
+      $composableBuilder(column: $table.badgeName, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get earnedAt =>
+      $composableBuilder(column: $table.earnedAt, builder: (column) => column);
+
+  $$StudentsTableAnnotationComposer get studentId {
+    final $$StudentsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$EarnedBadgesTableTableManager extends RootTableManager<
+    _$OticDatabase,
+    $EarnedBadgesTable,
+    EarnedBadge,
+    $$EarnedBadgesTableFilterComposer,
+    $$EarnedBadgesTableOrderingComposer,
+    $$EarnedBadgesTableAnnotationComposer,
+    $$EarnedBadgesTableCreateCompanionBuilder,
+    $$EarnedBadgesTableUpdateCompanionBuilder,
+    (EarnedBadge, $$EarnedBadgesTableReferences),
+    EarnedBadge,
+    PrefetchHooks Function({bool studentId})> {
+  $$EarnedBadgesTableTableManager(_$OticDatabase db, $EarnedBadgesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EarnedBadgesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EarnedBadgesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EarnedBadgesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> studentId = const Value.absent(),
+            Value<String> badgeId = const Value.absent(),
+            Value<String> badgeName = const Value.absent(),
+            Value<DateTime> earnedAt = const Value.absent(),
+          }) =>
+              EarnedBadgesCompanion(
+            id: id,
+            studentId: studentId,
+            badgeId: badgeId,
+            badgeName: badgeName,
+            earnedAt: earnedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int studentId,
+            required String badgeId,
+            required String badgeName,
+            Value<DateTime> earnedAt = const Value.absent(),
+          }) =>
+              EarnedBadgesCompanion.insert(
+            id: id,
+            studentId: studentId,
+            badgeId: badgeId,
+            badgeName: badgeName,
+            earnedAt: earnedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$EarnedBadgesTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({studentId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (studentId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.studentId,
+                    referencedTable:
+                        $$EarnedBadgesTableReferences._studentIdTable(db),
+                    referencedColumn:
+                        $$EarnedBadgesTableReferences._studentIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$EarnedBadgesTableProcessedTableManager = ProcessedTableManager<
+    _$OticDatabase,
+    $EarnedBadgesTable,
+    EarnedBadge,
+    $$EarnedBadgesTableFilterComposer,
+    $$EarnedBadgesTableOrderingComposer,
+    $$EarnedBadgesTableAnnotationComposer,
+    $$EarnedBadgesTableCreateCompanionBuilder,
+    $$EarnedBadgesTableUpdateCompanionBuilder,
+    (EarnedBadge, $$EarnedBadgesTableReferences),
+    EarnedBadge,
+    PrefetchHooks Function({bool studentId})>;
+typedef $$StudentProjectsTableCreateCompanionBuilder = StudentProjectsCompanion
+    Function({
+  Value<int> id,
+  required int studentId,
+  required String title,
+  required String topic,
+  required String projectType,
+  Value<String> stepsJson,
+  Value<String> status,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+typedef $$StudentProjectsTableUpdateCompanionBuilder = StudentProjectsCompanion
+    Function({
+  Value<int> id,
+  Value<int> studentId,
+  Value<String> title,
+  Value<String> topic,
+  Value<String> projectType,
+  Value<String> stepsJson,
+  Value<String> status,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+
+final class $$StudentProjectsTableReferences extends BaseReferences<
+    _$OticDatabase, $StudentProjectsTable, StudentProject> {
+  $$StudentProjectsTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $StudentsTable _studentIdTable(_$OticDatabase db) =>
+      db.students.createAlias(
+          $_aliasNameGenerator(db.studentProjects.studentId, db.students.id));
+
+  $$StudentsTableProcessedTableManager get studentId {
+    final $_column = $_itemColumn<int>('student_id')!;
+
+    final manager = $$StudentsTableTableManager($_db, $_db.students)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_studentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$StudentProjectsTableFilterComposer
+    extends Composer<_$OticDatabase, $StudentProjectsTable> {
+  $$StudentProjectsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get topic => $composableBuilder(
+      column: $table.topic, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get projectType => $composableBuilder(
+      column: $table.projectType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get stepsJson => $composableBuilder(
+      column: $table.stepsJson, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  $$StudentsTableFilterComposer get studentId {
+    final $$StudentsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableFilterComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$StudentProjectsTableOrderingComposer
+    extends Composer<_$OticDatabase, $StudentProjectsTable> {
+  $$StudentProjectsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get topic => $composableBuilder(
+      column: $table.topic, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get projectType => $composableBuilder(
+      column: $table.projectType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get stepsJson => $composableBuilder(
+      column: $table.stepsJson, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  $$StudentsTableOrderingComposer get studentId {
+    final $$StudentsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableOrderingComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$StudentProjectsTableAnnotationComposer
+    extends Composer<_$OticDatabase, $StudentProjectsTable> {
+  $$StudentProjectsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get topic =>
+      $composableBuilder(column: $table.topic, builder: (column) => column);
+
+  GeneratedColumn<String> get projectType => $composableBuilder(
+      column: $table.projectType, builder: (column) => column);
+
+  GeneratedColumn<String> get stepsJson =>
+      $composableBuilder(column: $table.stepsJson, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$StudentsTableAnnotationComposer get studentId {
+    final $$StudentsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$StudentProjectsTableTableManager extends RootTableManager<
+    _$OticDatabase,
+    $StudentProjectsTable,
+    StudentProject,
+    $$StudentProjectsTableFilterComposer,
+    $$StudentProjectsTableOrderingComposer,
+    $$StudentProjectsTableAnnotationComposer,
+    $$StudentProjectsTableCreateCompanionBuilder,
+    $$StudentProjectsTableUpdateCompanionBuilder,
+    (StudentProject, $$StudentProjectsTableReferences),
+    StudentProject,
+    PrefetchHooks Function({bool studentId})> {
+  $$StudentProjectsTableTableManager(
+      _$OticDatabase db, $StudentProjectsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudentProjectsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StudentProjectsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$StudentProjectsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> studentId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> topic = const Value.absent(),
+            Value<String> projectType = const Value.absent(),
+            Value<String> stepsJson = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              StudentProjectsCompanion(
+            id: id,
+            studentId: studentId,
+            title: title,
+            topic: topic,
+            projectType: projectType,
+            stepsJson: stepsJson,
+            status: status,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int studentId,
+            required String title,
+            required String topic,
+            required String projectType,
+            Value<String> stepsJson = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              StudentProjectsCompanion.insert(
+            id: id,
+            studentId: studentId,
+            title: title,
+            topic: topic,
+            projectType: projectType,
+            stepsJson: stepsJson,
+            status: status,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$StudentProjectsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({studentId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (studentId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.studentId,
+                    referencedTable:
+                        $$StudentProjectsTableReferences._studentIdTable(db),
+                    referencedColumn:
+                        $$StudentProjectsTableReferences._studentIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$StudentProjectsTableProcessedTableManager = ProcessedTableManager<
+    _$OticDatabase,
+    $StudentProjectsTable,
+    StudentProject,
+    $$StudentProjectsTableFilterComposer,
+    $$StudentProjectsTableOrderingComposer,
+    $$StudentProjectsTableAnnotationComposer,
+    $$StudentProjectsTableCreateCompanionBuilder,
+    $$StudentProjectsTableUpdateCompanionBuilder,
+    (StudentProject, $$StudentProjectsTableReferences),
+    StudentProject,
+    PrefetchHooks Function({bool studentId})>;
 
 class $OticDatabaseManager {
   final _$OticDatabase _db;
@@ -3588,4 +5298,8 @@ class $OticDatabaseManager {
       $$TopicProgressTableTableManager(_db, _db.topicProgress);
   $$LearningPathsTableTableManager get learningPaths =>
       $$LearningPathsTableTableManager(_db, _db.learningPaths);
+  $$EarnedBadgesTableTableManager get earnedBadges =>
+      $$EarnedBadgesTableTableManager(_db, _db.earnedBadges);
+  $$StudentProjectsTableTableManager get studentProjects =>
+      $$StudentProjectsTableTableManager(_db, _db.studentProjects);
 }

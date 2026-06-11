@@ -1,25 +1,36 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
+import 'daos/badge_dao.dart';
 import 'daos/path_dao.dart';
+import 'daos/project_dao.dart';
 import 'daos/session_dao.dart';
 import 'daos/student_dao.dart';
+import 'tables/earned_badges_table.dart';
 import 'tables/learning_paths_table.dart';
 import 'tables/session_summaries_table.dart';
+import 'tables/student_projects_table.dart';
 import 'tables/students_table.dart';
 import 'tables/topic_progress_table.dart';
 
 part 'otic_database.g.dart';
 
 @DriftDatabase(
-  tables: [Students, SessionSummaries, TopicProgress, LearningPaths],
-  daos: [StudentDao, SessionDao, PathDao],
+  tables: [
+    Students,
+    SessionSummaries,
+    TopicProgress,
+    LearningPaths,
+    EarnedBadges,
+    StudentProjects,
+  ],
+  daos: [StudentDao, SessionDao, PathDao, BadgeDao, ProjectDao],
 )
 class OticDatabase extends _$OticDatabase {
   OticDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -27,6 +38,13 @@ class OticDatabase extends _$OticDatabase {
         onUpgrade: (m, from, to) async {
           if (from < 2) {
             await m.createTable(learningPaths);
+          }
+          if (from < 3) {
+            await m.addColumn(students, students.streakDays);
+            await m.addColumn(students, students.lastStreakDate);
+            await m.addColumn(students, students.totalPoints);
+            await m.createTable(earnedBadges);
+            await m.createTable(studentProjects);
           }
         },
       );

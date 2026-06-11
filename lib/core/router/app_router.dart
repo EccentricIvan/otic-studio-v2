@@ -14,6 +14,7 @@ import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/practice/practice_screen.dart';
 import '../../features/projects/projects_screen.dart';
 import '../../features/settings/settings_screen.dart';
+import '../../features/teach/teach_screen.dart';
 import '../../features/teacher/teacher_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 
@@ -59,6 +60,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/achievements', builder: (_, __) => const AchievementsScreen()),
           GoRoute(path: '/certificates', builder: (_, __) => const CertificatesScreen()),
           GoRoute(path: '/collaborate', builder: (_, __) => const CollaborateScreen()),
+          GoRoute(path: '/teach', builder: (_, __) => const TeachScreen()),
           GoRoute(path: '/teacher', builder: (_, __) => const TeacherScreen()),
           GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
         ],
