@@ -11,18 +11,17 @@ class OticApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
     return MaterialApp.router(
       title: 'OTIC Studio',
       theme: AppTheme.light,
-      routerConfig: appRouter,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-/// Wraps the entire app: shows the model-not-installed gate if needed.
-/// Used by the Learn screen internally — not blocking app launch,
-/// so students can still browse the home screen and other areas.
+/// Gates the Learn screen: shows "model not installed" if no model found.
 class ModelGate extends ConsumerWidget {
   const ModelGate({super.key, required this.child});
   final Widget child;

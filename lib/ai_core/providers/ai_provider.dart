@@ -4,6 +4,7 @@ import '../inference/mock_engine.dart';
 import '../model/model_manager.dart';
 import '../tutor/tutor_pipeline.dart';
 import '../tutor/tutor_response.dart';
+import '../../db/providers/db_provider.dart';
 
 // ── Model status ────────────────────────────────────────────────────────────
 
@@ -122,11 +123,33 @@ class ChatNotifier extends AsyncNotifier<ChatState> {
         isGenerating: false,
         streamingText: '',
       ));
+
+      // Persist session summary to SQLite after each AI response
+      _saveSessionSnapshot(response, msgs.length);
     } catch (e) {
       state = AsyncData(state.requireValue.copyWith(
         isGenerating: false,
         streamingText: '',
       ));
+    }
+  }
+
+  Future<void> _saveSessionSnapshot(TutorResponse response, int msgCount) async {
+    try {
+      final student = await ref.read(activeStudentProvider.future);
+      if (student == null) return;
+      final db = ref.read(dbProvider);
+      await db.sessionDao.saveSession(
+        studentId: student.id,
+        topic: response.topic,
+        summary: response.text.length > 200
+            ? '${response.text.substring(0, 200)}…'
+            : response.text,
+        highestStage: response.stage.name,
+        messageCount: msgCount,
+      );
+    } catch (_) {
+      // Never crash the chat if DB write fails
     }
   }
 

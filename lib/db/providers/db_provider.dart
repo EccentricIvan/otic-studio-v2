@@ -1,0 +1,86 @@
+import 'package:drift/drift.dart' show Value;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../otic_database.dart';
+
+// ── Database singleton ────────────────────────────────────────────────────────
+
+final dbProvider = Provider<OticDatabase>((ref) {
+  final db = OticDatabase();
+  ref.onDispose(db.close);
+  return db;
+});
+
+// ── Student ───────────────────────────────────────────────────────────────────
+
+/// The active student profile, or null if no profile created yet.
+final activeStudentProvider = FutureProvider<Student?>((ref) {
+  final db = ref.watch(dbProvider);
+  return db.studentDao.getActiveStudent();
+});
+
+/// True if the device has an existing student profile.
+final hasProfileProvider = FutureProvider<bool>((ref) async {
+  final student = await ref.watch(activeStudentProvider.future);
+  return student != null;
+});
+
+// ── Session history ───────────────────────────────────────────────────────────
+
+final recentSessionsProvider =
+    FutureProvider.family((ref, int studentId) {
+  final db = ref.watch(dbProvider);
+  return db.sessionDao.getRecentSessions(studentId);
+});
+
+final topicProgressProvider =
+    FutureProvider.family((ref, int studentId) {
+  final db = ref.watch(dbProvider);
+  return db.sessionDao.getTopicProgress(studentId);
+});
+
+// ── Student notifier (create / update) ───────────────────────────────────────
+
+class StudentNotifier extends AsyncNotifier<Student?> {
+  @override
+  Future<Student?> build() async {
+    final db = ref.watch(dbProvider);
+    return db.studentDao.getActiveStudent();
+  }
+
+  Future<void> createProfile({
+    required String name,
+    int? age,
+    String? grade,
+    String language = 'en',
+    List<String> interests = const [],
+    String learningStyle = 'unknown',
+  }) async {
+    final db = ref.read(dbProvider);
+    final id = await db.studentDao.createStudent(
+      StudentsCompanion.insert(
+        name: name,
+        age: Value(age),
+        grade: Value(grade),
+        language: Value(language),
+        interestsJson: Value(_toJson(interests)),
+        learningStyle: Value(learningStyle),
+        createdAt: Value(DateTime.now()),
+        lastActiveAt: Value(DateTime.now()),
+      ),
+    );
+    state = AsyncData(await db.studentDao.getStudentById(id));
+    ref.invalidate(activeStudentProvider);
+    ref.invalidate(hasProfileProvider);
+  }
+
+  Future<void> touch(int id) async {
+    final db = ref.read(dbProvider);
+    await db.studentDao.touchStudent(id);
+  }
+
+  String _toJson(List<String> list) =>
+      '[${list.map((s) => '"$s"').join(',')}]';
+}
+
+final studentNotifierProvider =
+    AsyncNotifierProvider<StudentNotifier, Student?>(StudentNotifier.new);
