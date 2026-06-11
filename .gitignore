@@ -60,3 +60,5 @@ packages/ai-core/models/
 # Flutter-generated files
 .flutter-plugins
 flutter_export_environment.sh
+
+android/build/
