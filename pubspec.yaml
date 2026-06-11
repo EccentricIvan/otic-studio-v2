@@ -12,7 +12,6 @@ dependencies:
 
   # Navigation + UI
   go_router: ^14.0.0
-  google_fonts: ^6.2.1
   flutter_riverpod: ^2.5.1
 
   # AI inference — Android: LiteRT-LM (Gemma), Desktop: llama.cpp via FFI
@@ -26,13 +25,10 @@ dependencies:
   path: ^1.9.0
 
   # Model installer — lets the user pick the Gemma file from USB/Downloads
-  file_picker: ^8.1.2
+  file_picker: 8.3.7
 
   # PDF certificate generation (offline, pure Dart)
   pdf: ^3.10.8
-
-  # Utilities
-  riverpod_annotation: ^2.3.5
 
 dev_dependencies:
   flutter_test:
@@ -40,7 +36,6 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   drift_dev: ^2.20.0
   build_runner: ^2.4.12
-  riverpod_generator: ^2.4.3
 
 flutter:
   uses-material-design: true
@@ -48,3 +43,16 @@ flutter:
   assets:
     - assets/models/        # placeholder dir, actual model files gitignored
     - assets/prompts/       # system prompt templates
+
+  # Bundled offline — google_fonts would fetch over the network at runtime
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
