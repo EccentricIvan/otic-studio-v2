@@ -17,6 +17,7 @@ import '../../features/projects/projects_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/teach/teach_screen.dart';
 import '../../features/teacher/teacher_screen.dart';
+import '../../features/website/website_builder_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 
 final _rootKey = GlobalKey<NavigatorState>();
@@ -57,6 +58,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(path: '/practice', builder: (_, __) => const PracticeScreen()),
           GoRoute(path: '/create', builder: (_, __) => const CreateScreen()),
+          GoRoute(path: '/website', builder: (_, __) => const WebsiteBuilderScreen()),
           GoRoute(path: '/projects', builder: (_, __) => const ProjectsScreen()),
           GoRoute(path: '/achievements', builder: (_, __) => const AchievementsScreen()),
           GoRoute(path: '/certificates', builder: (_, __) => const CertificatesScreen()),
@@ -94,6 +96,7 @@ final appRouter = GoRouter(
         ),
         GoRoute(path: '/practice', builder: (_, __) => const PracticeScreen()),
         GoRoute(path: '/create', builder: (_, __) => const CreateScreen()),
+        GoRoute(path: '/website', builder: (_, __) => const WebsiteBuilderScreen()),
         GoRoute(path: '/projects', builder: (_, __) => const ProjectsScreen()),
         GoRoute(path: '/achievements', builder: (_, __) => const AchievementsScreen()),
         GoRoute(path: '/certificates', builder: (_, __) => const CertificatesScreen()),

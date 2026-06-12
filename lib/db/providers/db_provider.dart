@@ -98,3 +98,10 @@ final studentProjectsProvider = FutureProvider.family((ref, int studentId) {
   final db = ref.watch(dbProvider);
   return db.projectDao.getProjectsForStudent(studentId);
 });
+
+// ── Websites ──────────────────────────────────────────────────────────────────
+
+final studentWebsitesProvider = FutureProvider.family((ref, int studentId) {
+  final db = ref.watch(dbProvider);
+  return db.websiteDao.getWebsitesForStudent(studentId);
+});

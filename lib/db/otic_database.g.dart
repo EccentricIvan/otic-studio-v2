@@ -2903,6 +2903,384 @@ class StudentProjectsCompanion extends UpdateCompanion<StudentProject> {
   }
 }
 
+class $WebsiteProjectsTable extends WebsiteProjects
+    with TableInfo<$WebsiteProjectsTable, WebsiteProject> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WebsiteProjectsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _studentIdMeta =
+      const VerificationMeta('studentId');
+  @override
+  late final GeneratedColumn<int> studentId = GeneratedColumn<int>(
+      'student_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES students (id) ON DELETE CASCADE'));
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _themeColorMeta =
+      const VerificationMeta('themeColor');
+  @override
+  late final GeneratedColumn<String> themeColor = GeneratedColumn<String>(
+      'theme_color', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('#4F46E5'));
+  static const VerificationMeta _blocksJsonMeta =
+      const VerificationMeta('blocksJson');
+  @override
+  late final GeneratedColumn<String> blocksJson = GeneratedColumn<String>(
+      'blocks_json', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('[]'));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, studentId, title, themeColor, blocksJson, createdAt, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'website_projects';
+  @override
+  VerificationContext validateIntegrity(Insertable<WebsiteProject> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(_studentIdMeta,
+          studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta));
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('theme_color')) {
+      context.handle(
+          _themeColorMeta,
+          themeColor.isAcceptableOrUnknown(
+              data['theme_color']!, _themeColorMeta));
+    }
+    if (data.containsKey('blocks_json')) {
+      context.handle(
+          _blocksJsonMeta,
+          blocksJson.isAcceptableOrUnknown(
+              data['blocks_json']!, _blocksJsonMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WebsiteProject map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WebsiteProject(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      studentId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}student_id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      themeColor: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}theme_color'])!,
+      blocksJson: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}blocks_json'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $WebsiteProjectsTable createAlias(String alias) {
+    return $WebsiteProjectsTable(attachedDatabase, alias);
+  }
+}
+
+class WebsiteProject extends DataClass implements Insertable<WebsiteProject> {
+  final int id;
+  final int studentId;
+  final String title;
+  final String themeColor;
+  final String blocksJson;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const WebsiteProject(
+      {required this.id,
+      required this.studentId,
+      required this.title,
+      required this.themeColor,
+      required this.blocksJson,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['student_id'] = Variable<int>(studentId);
+    map['title'] = Variable<String>(title);
+    map['theme_color'] = Variable<String>(themeColor);
+    map['blocks_json'] = Variable<String>(blocksJson);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  WebsiteProjectsCompanion toCompanion(bool nullToAbsent) {
+    return WebsiteProjectsCompanion(
+      id: Value(id),
+      studentId: Value(studentId),
+      title: Value(title),
+      themeColor: Value(themeColor),
+      blocksJson: Value(blocksJson),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory WebsiteProject.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WebsiteProject(
+      id: serializer.fromJson<int>(json['id']),
+      studentId: serializer.fromJson<int>(json['studentId']),
+      title: serializer.fromJson<String>(json['title']),
+      themeColor: serializer.fromJson<String>(json['themeColor']),
+      blocksJson: serializer.fromJson<String>(json['blocksJson']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'studentId': serializer.toJson<int>(studentId),
+      'title': serializer.toJson<String>(title),
+      'themeColor': serializer.toJson<String>(themeColor),
+      'blocksJson': serializer.toJson<String>(blocksJson),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  WebsiteProject copyWith(
+          {int? id,
+          int? studentId,
+          String? title,
+          String? themeColor,
+          String? blocksJson,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      WebsiteProject(
+        id: id ?? this.id,
+        studentId: studentId ?? this.studentId,
+        title: title ?? this.title,
+        themeColor: themeColor ?? this.themeColor,
+        blocksJson: blocksJson ?? this.blocksJson,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  WebsiteProject copyWithCompanion(WebsiteProjectsCompanion data) {
+    return WebsiteProject(
+      id: data.id.present ? data.id.value : this.id,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      title: data.title.present ? data.title.value : this.title,
+      themeColor:
+          data.themeColor.present ? data.themeColor.value : this.themeColor,
+      blocksJson:
+          data.blocksJson.present ? data.blocksJson.value : this.blocksJson,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WebsiteProject(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('title: $title, ')
+          ..write('themeColor: $themeColor, ')
+          ..write('blocksJson: $blocksJson, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, studentId, title, themeColor, blocksJson, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WebsiteProject &&
+          other.id == this.id &&
+          other.studentId == this.studentId &&
+          other.title == this.title &&
+          other.themeColor == this.themeColor &&
+          other.blocksJson == this.blocksJson &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class WebsiteProjectsCompanion extends UpdateCompanion<WebsiteProject> {
+  final Value<int> id;
+  final Value<int> studentId;
+  final Value<String> title;
+  final Value<String> themeColor;
+  final Value<String> blocksJson;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const WebsiteProjectsCompanion({
+    this.id = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.themeColor = const Value.absent(),
+    this.blocksJson = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  WebsiteProjectsCompanion.insert({
+    this.id = const Value.absent(),
+    required int studentId,
+    required String title,
+    this.themeColor = const Value.absent(),
+    this.blocksJson = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  })  : studentId = Value(studentId),
+        title = Value(title);
+  static Insertable<WebsiteProject> custom({
+    Expression<int>? id,
+    Expression<int>? studentId,
+    Expression<String>? title,
+    Expression<String>? themeColor,
+    Expression<String>? blocksJson,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (studentId != null) 'student_id': studentId,
+      if (title != null) 'title': title,
+      if (themeColor != null) 'theme_color': themeColor,
+      if (blocksJson != null) 'blocks_json': blocksJson,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  WebsiteProjectsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? studentId,
+      Value<String>? title,
+      Value<String>? themeColor,
+      Value<String>? blocksJson,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
+    return WebsiteProjectsCompanion(
+      id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
+      title: title ?? this.title,
+      themeColor: themeColor ?? this.themeColor,
+      blocksJson: blocksJson ?? this.blocksJson,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<int>(studentId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (themeColor.present) {
+      map['theme_color'] = Variable<String>(themeColor.value);
+    }
+    if (blocksJson.present) {
+      map['blocks_json'] = Variable<String>(blocksJson.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WebsiteProjectsCompanion(')
+          ..write('id: $id, ')
+          ..write('studentId: $studentId, ')
+          ..write('title: $title, ')
+          ..write('themeColor: $themeColor, ')
+          ..write('blocksJson: $blocksJson, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$OticDatabase extends GeneratedDatabase {
   _$OticDatabase(QueryExecutor e) : super(e);
   $OticDatabaseManager get managers => $OticDatabaseManager(this);
@@ -2914,11 +3292,14 @@ abstract class _$OticDatabase extends GeneratedDatabase {
   late final $EarnedBadgesTable earnedBadges = $EarnedBadgesTable(this);
   late final $StudentProjectsTable studentProjects =
       $StudentProjectsTable(this);
+  late final $WebsiteProjectsTable websiteProjects =
+      $WebsiteProjectsTable(this);
   late final StudentDao studentDao = StudentDao(this as OticDatabase);
   late final SessionDao sessionDao = SessionDao(this as OticDatabase);
   late final PathDao pathDao = PathDao(this as OticDatabase);
   late final BadgeDao badgeDao = BadgeDao(this as OticDatabase);
   late final ProjectDao projectDao = ProjectDao(this as OticDatabase);
+  late final WebsiteDao websiteDao = WebsiteDao(this as OticDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2929,7 +3310,8 @@ abstract class _$OticDatabase extends GeneratedDatabase {
         topicProgress,
         learningPaths,
         earnedBadges,
-        studentProjects
+        studentProjects,
+        websiteProjects
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -2967,6 +3349,13 @@ abstract class _$OticDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('student_projects', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('students',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('website_projects', kind: UpdateKind.delete),
             ],
           ),
         ],
@@ -3087,6 +3476,23 @@ final class $$StudentsTableReferences
 
     final cache =
         $_typedResult.readTableOrNull(_studentProjectsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$WebsiteProjectsTable, List<WebsiteProject>>
+      _websiteProjectsRefsTable(_$OticDatabase db) =>
+          MultiTypedResultKey.fromTable(db.websiteProjects,
+              aliasName: $_aliasNameGenerator(
+                  db.students.id, db.websiteProjects.studentId));
+
+  $$WebsiteProjectsTableProcessedTableManager get websiteProjectsRefs {
+    final manager =
+        $$WebsiteProjectsTableTableManager($_db, $_db.websiteProjects)
+            .filter((f) => f.studentId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_websiteProjectsRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -3245,6 +3651,27 @@ class $$StudentsTableFilterComposer
             $$StudentProjectsTableFilterComposer(
               $db: $db,
               $table: $db.studentProjects,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> websiteProjectsRefs(
+      Expression<bool> Function($$WebsiteProjectsTableFilterComposer f) f) {
+    final $$WebsiteProjectsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.websiteProjects,
+        getReferencedColumn: (t) => t.studentId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$WebsiteProjectsTableFilterComposer(
+              $db: $db,
+              $table: $db.websiteProjects,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -3473,6 +3900,27 @@ class $$StudentsTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> websiteProjectsRefs<T extends Object>(
+      Expression<T> Function($$WebsiteProjectsTableAnnotationComposer a) f) {
+    final $$WebsiteProjectsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.websiteProjects,
+        getReferencedColumn: (t) => t.studentId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$WebsiteProjectsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.websiteProjects,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$StudentsTableTableManager extends RootTableManager<
@@ -3491,7 +3939,8 @@ class $$StudentsTableTableManager extends RootTableManager<
         bool topicProgressRefs,
         bool learningPathsRefs,
         bool earnedBadgesRefs,
-        bool studentProjectsRefs})> {
+        bool studentProjectsRefs,
+        bool websiteProjectsRefs})> {
   $$StudentsTableTableManager(_$OticDatabase db, $StudentsTable table)
       : super(TableManagerState(
           db: db,
@@ -3579,7 +4028,8 @@ class $$StudentsTableTableManager extends RootTableManager<
               topicProgressRefs = false,
               learningPathsRefs = false,
               earnedBadgesRefs = false,
-              studentProjectsRefs = false}) {
+              studentProjectsRefs = false,
+              websiteProjectsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
@@ -3587,7 +4037,8 @@ class $$StudentsTableTableManager extends RootTableManager<
                 if (topicProgressRefs) db.topicProgress,
                 if (learningPathsRefs) db.learningPaths,
                 if (earnedBadgesRefs) db.earnedBadges,
-                if (studentProjectsRefs) db.studentProjects
+                if (studentProjectsRefs) db.studentProjects,
+                if (websiteProjectsRefs) db.websiteProjects
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -3656,6 +4107,19 @@ class $$StudentsTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.studentId == item.id),
+                        typedResults: items),
+                  if (websiteProjectsRefs)
+                    await $_getPrefetchedData<Student, $StudentsTable,
+                            WebsiteProject>(
+                        currentTable: table,
+                        referencedTable: $$StudentsTableReferences
+                            ._websiteProjectsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$StudentsTableReferences(db, table, p0)
+                                .websiteProjectsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.studentId == item.id),
                         typedResults: items)
                 ];
               },
@@ -3680,7 +4144,8 @@ typedef $$StudentsTableProcessedTableManager = ProcessedTableManager<
         bool topicProgressRefs,
         bool learningPathsRefs,
         bool earnedBadgesRefs,
-        bool studentProjectsRefs})>;
+        bool studentProjectsRefs,
+        bool websiteProjectsRefs})>;
 typedef $$SessionSummariesTableCreateCompanionBuilder
     = SessionSummariesCompanion Function({
   Value<int> id,
@@ -5286,6 +5751,307 @@ typedef $$StudentProjectsTableProcessedTableManager = ProcessedTableManager<
     (StudentProject, $$StudentProjectsTableReferences),
     StudentProject,
     PrefetchHooks Function({bool studentId})>;
+typedef $$WebsiteProjectsTableCreateCompanionBuilder = WebsiteProjectsCompanion
+    Function({
+  Value<int> id,
+  required int studentId,
+  required String title,
+  Value<String> themeColor,
+  Value<String> blocksJson,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+typedef $$WebsiteProjectsTableUpdateCompanionBuilder = WebsiteProjectsCompanion
+    Function({
+  Value<int> id,
+  Value<int> studentId,
+  Value<String> title,
+  Value<String> themeColor,
+  Value<String> blocksJson,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+
+final class $$WebsiteProjectsTableReferences extends BaseReferences<
+    _$OticDatabase, $WebsiteProjectsTable, WebsiteProject> {
+  $$WebsiteProjectsTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $StudentsTable _studentIdTable(_$OticDatabase db) =>
+      db.students.createAlias(
+          $_aliasNameGenerator(db.websiteProjects.studentId, db.students.id));
+
+  $$StudentsTableProcessedTableManager get studentId {
+    final $_column = $_itemColumn<int>('student_id')!;
+
+    final manager = $$StudentsTableTableManager($_db, $_db.students)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_studentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$WebsiteProjectsTableFilterComposer
+    extends Composer<_$OticDatabase, $WebsiteProjectsTable> {
+  $$WebsiteProjectsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get themeColor => $composableBuilder(
+      column: $table.themeColor, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get blocksJson => $composableBuilder(
+      column: $table.blocksJson, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  $$StudentsTableFilterComposer get studentId {
+    final $$StudentsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableFilterComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WebsiteProjectsTableOrderingComposer
+    extends Composer<_$OticDatabase, $WebsiteProjectsTable> {
+  $$WebsiteProjectsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get themeColor => $composableBuilder(
+      column: $table.themeColor, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get blocksJson => $composableBuilder(
+      column: $table.blocksJson, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  $$StudentsTableOrderingComposer get studentId {
+    final $$StudentsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableOrderingComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WebsiteProjectsTableAnnotationComposer
+    extends Composer<_$OticDatabase, $WebsiteProjectsTable> {
+  $$WebsiteProjectsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get themeColor => $composableBuilder(
+      column: $table.themeColor, builder: (column) => column);
+
+  GeneratedColumn<String> get blocksJson => $composableBuilder(
+      column: $table.blocksJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$StudentsTableAnnotationComposer get studentId {
+    final $$StudentsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.studentId,
+        referencedTable: $db.students,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$StudentsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.students,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WebsiteProjectsTableTableManager extends RootTableManager<
+    _$OticDatabase,
+    $WebsiteProjectsTable,
+    WebsiteProject,
+    $$WebsiteProjectsTableFilterComposer,
+    $$WebsiteProjectsTableOrderingComposer,
+    $$WebsiteProjectsTableAnnotationComposer,
+    $$WebsiteProjectsTableCreateCompanionBuilder,
+    $$WebsiteProjectsTableUpdateCompanionBuilder,
+    (WebsiteProject, $$WebsiteProjectsTableReferences),
+    WebsiteProject,
+    PrefetchHooks Function({bool studentId})> {
+  $$WebsiteProjectsTableTableManager(
+      _$OticDatabase db, $WebsiteProjectsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WebsiteProjectsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WebsiteProjectsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WebsiteProjectsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> studentId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> themeColor = const Value.absent(),
+            Value<String> blocksJson = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              WebsiteProjectsCompanion(
+            id: id,
+            studentId: studentId,
+            title: title,
+            themeColor: themeColor,
+            blocksJson: blocksJson,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int studentId,
+            required String title,
+            Value<String> themeColor = const Value.absent(),
+            Value<String> blocksJson = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              WebsiteProjectsCompanion.insert(
+            id: id,
+            studentId: studentId,
+            title: title,
+            themeColor: themeColor,
+            blocksJson: blocksJson,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$WebsiteProjectsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({studentId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (studentId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.studentId,
+                    referencedTable:
+                        $$WebsiteProjectsTableReferences._studentIdTable(db),
+                    referencedColumn:
+                        $$WebsiteProjectsTableReferences._studentIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$WebsiteProjectsTableProcessedTableManager = ProcessedTableManager<
+    _$OticDatabase,
+    $WebsiteProjectsTable,
+    WebsiteProject,
+    $$WebsiteProjectsTableFilterComposer,
+    $$WebsiteProjectsTableOrderingComposer,
+    $$WebsiteProjectsTableAnnotationComposer,
+    $$WebsiteProjectsTableCreateCompanionBuilder,
+    $$WebsiteProjectsTableUpdateCompanionBuilder,
+    (WebsiteProject, $$WebsiteProjectsTableReferences),
+    WebsiteProject,
+    PrefetchHooks Function({bool studentId})>;
 
 class $OticDatabaseManager {
   final _$OticDatabase _db;
@@ -5302,4 +6068,6 @@ class $OticDatabaseManager {
       $$EarnedBadgesTableTableManager(_db, _db.earnedBadges);
   $$StudentProjectsTableTableManager get studentProjects =>
       $$StudentProjectsTableTableManager(_db, _db.studentProjects);
+  $$WebsiteProjectsTableTableManager get websiteProjects =>
+      $$WebsiteProjectsTableTableManager(_db, _db.websiteProjects);
 }
