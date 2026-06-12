@@ -164,7 +164,7 @@ class _SideNav extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 const Text(
-                  'Offline · v1.0',
+                  'Offline · v1.1',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textHint,
