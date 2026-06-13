@@ -7,6 +7,8 @@
 [![Offline](https://img.shields.io/badge/network-100%25%20offline-10B981)](#core-constraint-offline-first)
 [![Built with Flutter](https://img.shields.io/badge/built%20with-Flutter-02569B)](https://flutter.dev)
 
+> **Maintainers / new team:** start with **[HANDOVER.md](HANDOVER.md)** — it lists everything needed to build, change, release, and maintain the app, including the signing keystore and AI model that are not in the repo.
+
 OTIC Studio is a fully offline AI tutor and learning platform for students in schools with no reliable internet. Every feature — AI responses, curriculum generation, exercises, certificates, badges, even a website builder — runs entirely on-device. **No internet, no cloud, no external APIs, no accounts. Ever.**
 
 The AI model (Gemma 3 1B) is bundled and runs locally: LiteRT-LM on Android, llama.cpp on desktop. Updates ship by USB drive or local school LAN, never the internet.
