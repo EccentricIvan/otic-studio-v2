@@ -475,7 +475,7 @@ class _InputBar extends StatelessWidget {
               controller: controller,
               onSubmitted: (_) => onSend(),
               decoration: const InputDecoration(
-                hintText: 'Ask anything — photosynthesis, Python, gravity…',
+                hintText: 'Ask Otic anything...',
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,

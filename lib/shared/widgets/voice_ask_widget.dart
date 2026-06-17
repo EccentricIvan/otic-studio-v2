@@ -59,7 +59,7 @@ class _VoiceAskWidgetState extends State<VoiceAskWidget> {
                 child: TextField(
                   controller: _controller,
                   decoration: const InputDecoration(
-                    hintText: 'Ask anything...',
+                    hintText: 'Ask Otic anything...',
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
