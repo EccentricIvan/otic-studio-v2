@@ -4,8 +4,13 @@ This document is for the team taking over maintenance of Otic Studio. It lists
 everything needed to build, change, release, and maintain the app, and points to
 the deeper docs for each topic. If you read one file first, read this one.
 
-**Current status:** v1.1.0 shipped and live. Android (APK) and Windows (zip)
-builds are published on the [Releases page](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/latest).
+**Current status:** v1.1.0 is shipped and live. The rolling **Otic Studio Latest
+Build** release is rebuilt automatically from `main` and publishes the full
+Android APK plus the full Windows zip on the
+[Releases page](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/tag/latest-build).
+The latest branding update changes only logos/icons/splash assets; it does not
+change the offline app behavior, student data, AI model flow, or lightweight
+runtime design.
 
 ---
 
@@ -140,8 +145,10 @@ apksigner verify --print-certs <apk>     # compare the printed SHA-256 to the ab
 - **Database changes:** edit a table/DAO, then run
   `dart run build_runner build --delete-conflicting-outputs`. Migrations are
   additive — never destroy student data ([docs/ARCHITECTURE.md §5](docs/ARCHITECTURE.md)).
-- **Cut a release:** [docs/RELEASING.md](docs/RELEASING.md) — build, sign, verify
-  signature, `gh release create`. Helper: `tools/publish_release.ps1`.
+- **Latest build release:** push to `main`; GitHub Actions builds the full APK and
+  Windows zip, then updates the rolling `latest-build` release.
+- **Versioned release:** [docs/RELEASING.md](docs/RELEASING.md) — build, sign,
+  verify signature, `gh release create`. Helper: `tools/publish_release.ps1`.
 - **Offline update bundles** (USB/LAN for schools): `tools/make_update_package.ps1`.
 
 ---
