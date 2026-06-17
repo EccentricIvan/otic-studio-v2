@@ -1,0 +1,109 @@
+name: Build Release Artifacts
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.2'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Prepare APK
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk dist/otic-studio-latest.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: otic-studio-latest-apk
+          path: dist/otic-studio-latest.apk
+          if-no-files-found: error
+
+  build-windows:
+    name: Build Windows EXE
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.2'
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Prepare Windows zip
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "dist\otic-studio-windows-latest.zip" -Force
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: otic-studio-windows-latest
+          path: dist/otic-studio-windows-latest.zip
+          if-no-files-found: error
+
+  publish-latest:
+    name: Publish Latest Build
+    runs-on: ubuntu-latest
+    needs: [build-apk, build-windows]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Flatten artifacts
+        run: |
+          find dist -type f -maxdepth 3 -print
+          cp dist/otic-studio-latest-apk/otic-studio-latest.apk ./otic-studio-latest.apk
+          cp dist/otic-studio-windows-latest/otic-studio-windows-latest.zip ./otic-studio-windows-latest.zip
+
+      - name: Update rolling release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view latest-build --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create latest-build               --repo "$GITHUB_REPOSITORY"               --title "Otic Studio Latest Build"               --notes "Automatically built APK and Windows zip from the latest main branch."
+          fi
+          gh release upload latest-build             otic-studio-latest.apk             otic-studio-windows-latest.zip             --repo "$GITHUB_REPOSITORY"             --clobber
