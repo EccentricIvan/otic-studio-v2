@@ -38,6 +38,9 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
     _animation = Tween<double>(begin: 0, end: widget.progress).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
     );
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
     _controller.forward();
   }
 
@@ -63,25 +66,19 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = widget.backgroundColor ??
-        Theme.of(context).dividerColor;
-
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (_, child) => SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: CustomPaint(
-          painter: _RingPainter(
-            progress: _animation.value,
-            color: widget.color,
-            backgroundColor: bgColor,
-            strokeWidth: widget.strokeWidth,
-          ),
-          child: Center(child: child),
+    final bgColor = widget.backgroundColor ?? Theme.of(context).dividerColor;
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: CustomPaint(
+        painter: _RingPainter(
+          progress: _animation.value,
+          color: widget.color,
+          backgroundColor: bgColor,
+          strokeWidth: widget.strokeWidth,
         ),
+        child: Center(child: widget.child),
       ),
-      child: widget.child,
     );
   }
 }

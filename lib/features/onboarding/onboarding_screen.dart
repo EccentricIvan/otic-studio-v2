@@ -741,10 +741,19 @@ class _ShimmerLines extends StatefulWidget {
 
 class _ShimmerLinesState extends State<_ShimmerLines>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1200),
-  )..repeat();
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -755,23 +764,18 @@ class _ShimmerLinesState extends State<_ShimmerLines>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, __) {
-        final opacity = 0.06 + (_controller.value * 0.08);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _line(1.0, opacity, theme),
-            const SizedBox(height: 10),
-            _line(0.92, opacity, theme),
-            const SizedBox(height: 10),
-            _line(0.78, opacity, theme),
-            const SizedBox(height: 10),
-            _line(0.6, opacity, theme),
-          ],
-        );
-      },
+    final opacity = 0.06 + (_controller.value * 0.08);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _line(1.0, opacity, theme),
+        const SizedBox(height: 10),
+        _line(0.92, opacity, theme),
+        const SizedBox(height: 10),
+        _line(0.78, opacity, theme),
+        const SizedBox(height: 10),
+        _line(0.6, opacity, theme),
+      ],
     );
   }
 

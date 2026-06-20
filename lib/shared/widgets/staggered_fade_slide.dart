@@ -36,6 +36,10 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
+
     Future.delayed(widget.staggerDelay * widget.index, () {
       if (mounted) _controller.forward();
     });
@@ -49,16 +53,12 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, child) => Opacity(
-        opacity: _fade.value,
-        child: Transform.translate(
-          offset: _slide.value,
-          child: child,
-        ),
+    return Opacity(
+      opacity: _fade.value,
+      child: Transform.translate(
+        offset: _slide.value,
+        child: widget.child,
       ),
-      child: widget.child,
     );
   }
 }

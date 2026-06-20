@@ -11,15 +11,21 @@ class ConfettiBurst extends StatefulWidget {
 
 class _ConfettiBurstState extends State<ConfettiBurst>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1800),
-  )..forward();
+  late final AnimationController _controller;
+  late final List<_Particle> _particles;
 
-  late final List<_Particle> _particles = List.generate(
-    widget.particleCount,
-    (_) => _Particle(),
-  );
+  @override
+  void initState() {
+    super.initState();
+    _particles = List.generate(widget.particleCount, (_) => _Particle());
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    )..forward();
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -30,17 +36,12 @@ class _ConfettiBurstState extends State<ConfettiBurst>
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) {
-          return CustomPaint(
-            painter: _ConfettiPainter(
-              progress: _controller.value,
-              particles: _particles,
-            ),
-            size: Size.infinite,
-          );
-        },
+      child: CustomPaint(
+        painter: _ConfettiPainter(
+          progress: _controller.value,
+          particles: _particles,
+        ),
+        size: Size.infinite,
       ),
     );
   }
@@ -95,7 +96,11 @@ class _ConfettiPainter extends CustomPainter {
 
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 0.6),
+          Rect.fromCenter(
+            center: Offset.zero,
+            width: p.size,
+            height: p.size * 0.6,
+          ),
           const Radius.circular(1),
         ),
         paint,
