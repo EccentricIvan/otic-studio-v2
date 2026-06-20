@@ -19,14 +19,14 @@ The AI model (Gemma 3 1B) is bundled and runs locally: LiteRT-LM on Android, lla
 
 Get the latest build from the [**Releases page**](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/latest). The rolling **Otic Studio Latest Build** release is produced automatically from `main` and provides both:
 
-On Android phones and tablets, use the direct [**Download Android APK**](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/download/latest-build/Otic%20Studio%20Latest.apk) link, or open the mobile-friendly [download page](index.html).
+On Android phones and tablets, use the direct [**Download Android APK**](https://github.com/malinzijeremiah01-lab/Otic-Studio/releases/download/latest-build/otic-studio-latest.apk) link, or open the mobile-friendly [download page](index.html).
 
 | Download | Platform | How to install |
 |---|---|---|
 | `Otic Studio vX.Y.Z.apk` | **Android phones/tablets** (4 GB RAM) | Copy to the device, open it, allow "Install unknown apps" |
 | `Otic Studio Windows vX.Y.Z.zip` | **Windows desktop** (8 GB RAM) | Extract anywhere, run `Otic Studio.exe` |
 
-Current automated artifact names are `Otic Studio Latest.apk` and `Otic Studio Windows Latest.zip`.
+Current automated artifact names are `otic-studio-latest.apk` and `otic-studio-windows-latest.zip`.
 
 Both can also be shared offline by USB, Bluetooth, or a local server. The APK is signed with the official Otic Studio certificate (`CN=Otic Studio, O=OTIC, L=Kampala, C=UG`); Android rejects updates not signed with the same key.
 

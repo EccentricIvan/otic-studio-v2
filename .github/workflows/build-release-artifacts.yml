@@ -38,13 +38,13 @@ jobs:
       - name: Prepare APK
         run: |
           mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-release.apk "dist/Otic Studio Latest.apk"
+          cp build/app/outputs/flutter-apk/app-release.apk "dist/otic-studio-latest.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: Otic Studio Latest APK
-          path: dist/Otic Studio Latest.apk
+          path: dist/otic-studio-latest.apk
           if-no-files-found: error
 
   build-windows:
@@ -74,13 +74,13 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
-          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "dist\Otic Studio Windows Latest.zip" -Force
+          Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "dist\otic-studio-windows-latest.zip" -Force
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: Otic Studio Windows Latest
-          path: dist/Otic Studio Windows Latest.zip
+          path: dist/otic-studio-windows-latest.zip
           if-no-files-found: error
 
   publish-latest:
@@ -96,8 +96,8 @@ jobs:
       - name: Flatten artifacts
         run: |
           find dist -type f -maxdepth 3 -print
-          cp "dist/Otic Studio Latest APK/Otic Studio Latest.apk" "./Otic Studio Latest.apk"
-          cp "dist/Otic Studio Windows Latest/Otic Studio Windows Latest.zip" "./Otic Studio Windows Latest.zip"
+          cp "dist/Otic Studio Latest APK/otic-studio-latest.apk" "./otic-studio-latest.apk"
+          cp "dist/Otic Studio Windows Latest/otic-studio-windows-latest.zip" "./otic-studio-windows-latest.zip"
 
       - name: Update rolling release
         env:
@@ -110,7 +110,7 @@ jobs:
               --notes "Automatically built APK and Windows zip from the latest main branch."
           fi
           gh release upload latest-build \
-            "Otic Studio Latest.apk" \
-            "Otic Studio Windows Latest.zip" \
+            "otic-studio-latest.apk" \
+            "otic-studio-windows-latest.zip" \
             --repo "$GITHUB_REPOSITORY" \
             --clobber
