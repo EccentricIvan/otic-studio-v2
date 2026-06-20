@@ -22,12 +22,24 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           flutter-version: '3.44.2'
           cache: true
+
+      - name: Install Android native toolchain
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
+            "ndk;28.0.12433566" \
+            "cmake;3.31.0"
 
       - name: Get dependencies
         run: flutter pub get
