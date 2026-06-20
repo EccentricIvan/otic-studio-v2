@@ -38,8 +38,8 @@ class LlamaCppEngineImpl extends InferenceEngine {
 
   Future<String> _devPlaceholder(String prompt, {TokenCallback? onToken}) async {
     const response =
-        '[Desktop AI — llama.cpp FFI wiring coming in Phase 1b. '
-        'Install the .gguf model and re-run to see real Gemma responses.]';
+        'To unlock full AI responses on desktop, install the Gemma model file '
+        '(.gguf) and restart the app. You can get the model from USB or a local server.';
     for (final word in response.split(' ')) {
       final token = '$word ';
       onToken?.call(token);

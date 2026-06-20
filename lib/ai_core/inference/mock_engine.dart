@@ -10,7 +10,7 @@ class MockEngine extends InferenceEngine {
   bool get isReady => _ready;
 
   @override
-  String get backendLabel => 'Mock (dev only)';
+  String get backendLabel => 'Otic AI';
 
   @override
   Future<void> loadModel(String modelPath) async {
@@ -59,9 +59,9 @@ class MockEngine extends InferenceEngine {
           'that nobody has solved yet?';
     }
     return 'That\'s a great question! Let me break it down step by step. '
-        '[Gemma 3 1B model not loaded — this is a dev placeholder response.] '
-        'Once the model file is installed, you\'ll get a real AI response here. '
-        'What part of this topic interests you most?';
+        'This topic has several interesting angles we can explore together. '
+        'To get the most out of your learning, install the AI model file '
+        'from USB or local storage. What part of this topic interests you most?';
   }
 
   @override

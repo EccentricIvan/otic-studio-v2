@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,39 +67,40 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       appBar: AppBar(
         title: const Text('Learn'),
         actions: [
-          engineAsync.when(
-            data: (engine) => Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Chip(
-                avatar: const Icon(
-                  Icons.memory,
-                  size: 14,
-                  color: AppColors.teachColor,
-                ),
-                label: Text(
-                  engine.backendLabel,
-                  style: const TextStyle(
-                    fontSize: 11,
+          if (kDebugMode)
+            engineAsync.when(
+              data: (engine) => Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Chip(
+                  avatar: const Icon(
+                    Icons.memory,
+                    size: 14,
                     color: AppColors.teachColor,
                   ),
+                  label: Text(
+                    engine.backendLabel,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.teachColor,
+                    ),
+                  ),
+                  backgroundColor: AppColors.teachColor.withValues(alpha: 0.08),
+                  side: BorderSide(
+                    color: AppColors.teachColor.withValues(alpha: 0.3),
+                  ),
+                  padding: EdgeInsets.zero,
                 ),
-                backgroundColor: AppColors.teachColor.withValues(alpha: 0.08),
-                side: BorderSide(
-                  color: AppColors.teachColor.withValues(alpha: 0.3),
+              ),
+              loading: () => const Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                padding: EdgeInsets.zero,
               ),
+              error: (_, __) => const SizedBox.shrink(),
             ),
-            loading: () => const Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: 'New session',
