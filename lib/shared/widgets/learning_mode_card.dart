@@ -39,13 +39,15 @@ class LearningModeCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(title, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 4),
-              Text(
-                description,
-                style: Theme.of(context).textTheme.bodyMedium,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  description,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Text(

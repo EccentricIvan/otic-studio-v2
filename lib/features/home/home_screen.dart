@@ -170,21 +170,21 @@ class _LearningModesGrid extends StatelessWidget {
       ),
       const _Mode(
         'Practice',
-        'Reinforce knowledge with exercises',
+        'Exercises and quizzes to reinforce knowledge',
         Icons.edit,
         AppColors.practiceColor,
         '/practice',
       ),
       const _Mode(
         'Create',
-        'Build real projects and solutions',
+        'Build projects guided step by step',
         Icons.lightbulb,
         AppColors.createColor,
         '/create',
       ),
       const _Mode(
         'Teach',
-        'Achieve mastery by teaching a topic',
+        'Explain a topic and get a mastery score',
         Icons.record_voice_over,
         AppColors.teachColor,
         '/teach',
@@ -200,7 +200,7 @@ class _LearningModesGrid extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: cols == 4 ? 0.78 : 0.88,
+          childAspectRatio: cols == 4 ? 0.75 : 0.82,
           children: modes
               .map(
                 (m) => LearningModeCard(
@@ -345,14 +345,12 @@ class _RecommendedSection extends ConsumerWidget {
 
   String _desc(String topic) {
     const map = {
-      'Artificial Intelligence':
-          'Learn how AI works, from basics to building your own models',
-      'Entrepreneurship':
-          'Start and grow your business with step-by-step guidance',
-      'Physics': 'Explore forces, energy, and laws that govern our universe',
-      'Mathematics': 'Build solid foundations — arithmetic through calculus',
-      'Biology': 'Discover the science of life, cells, and ecosystems',
-      'English Writing': 'Write clearly and confidently for any situation',
+      'Artificial Intelligence': 'Understand how AI works and build models',
+      'Entrepreneurship': 'Start and grow a business step by step',
+      'Physics': 'Explore forces, energy, and the laws of nature',
+      'Mathematics': 'Build foundations from arithmetic to calculus',
+      'Biology': 'Discover cells, ecosystems, and the science of life',
+      'English Writing': 'Write clearly and confidently in any context',
     };
     return map[topic] ?? 'Build a complete understanding of $topic';
   }
