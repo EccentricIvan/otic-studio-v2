@@ -23,18 +23,17 @@ final inferenceEngineProvider = Provider<InferenceEngine>((ref) {
 });
 
 final engineLoadedProvider = FutureProvider<InferenceEngine>((ref) async {
-  // Try Ollama first — works on any platform if running
-  try {
-    final engine = createPlatformEngine();
-    await engine.loadModel('');
-    ref.onDispose(engine.dispose);
-    return engine;
-  } catch (_) {
-    // Ollama not available — fall back to mock
+  final modelInfo = await ref.watch(modelInfoProvider.future);
+  if (!modelInfo.isReady) {
     final mock = MockEngine();
     await mock.loadModel('');
     return mock;
   }
+
+  final engine = createPlatformEngine();
+  await engine.loadModel(modelInfo.path!);
+  ref.onDispose(engine.dispose);
+  return engine;
 });
 
 // ── Tutor pipeline ───────────────────────────────────────────────────────────
