@@ -47,7 +47,7 @@ class ModelInfo {
 ///   Windows  → <appDocuments>\OTIC\gemma-3-1b-q4_k_m.gguf
 ///   Linux    → <appDocuments>/OTIC/gemma-3-1b-q4_k_m.gguf
 class ModelManager {
-  static const _androidModelName = 'gemma-3-1b.bin';
+  static const _androidModelName = 'gemma-model.bin';
   static const _desktopModelName = 'gemma-3-1b-q4_k_m.gguf';
   // Minimum sane file size — reject obvious truncations
   static const _minSizeBytes = 200 * 1024 * 1024; // 200 MB
