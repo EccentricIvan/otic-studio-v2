@@ -183,12 +183,100 @@ lib/
 
 ---
 
-## 8. Known State
+## 8. Gemma Integration (resolved)
+
+### What worked
+- **Gemma 2 2B GPU int8** model (`.bin` format from Kaggle) loads and runs
+- `flutter_gemma` 1.0.2 + `flutter_gemma_mediapipe` 1.0.0
+- `FlutterGemma.initialize()` called in `main()` with `MediaPipeEngine()`
+- `FlutterGemma.installModel().fromFile(path).install()` for loading
+- `InferenceModel.createChat()` + `generateChatResponseAsync()` for streaming
+- `response.token` extracts clean text (not `response.toString()`)
+- Responses are real, coherent, and contextual
+
+### What didn't work
+- **Gemma 3 `.task` file**: "Error building tflite model" — MediaPipe can't parse Gemma 3 format
+- **flutter_gemma 0.4.6**: `loadAssetModel` throws "should not be used in release build"
+- **flutter_gemma 1.0.2 initial attempt**: wrong API calls (`Message.text()` positional args, `response.text` getter)
+- Multiple CI failures from API mismatches, const+Theme.of conflicts, missing engine registration
+
+### Model install steps
+1. Download **gemma-2-tflite-gemma2-2b-it-gpu-int8** from Kaggle (LiteRT tab)
+2. Extract `.bin` file from tar.gz (~2.1 GB)
+3. Transfer to phone via USB
+4. Open app → Learn → "Install from file..." → pick the `.bin` file
+5. Wait for progress bar → AI is live
+
+### Performance notes
+- First response is slowest (model loading into memory)
+- Typical response time: 10-30 seconds on 6GB RAM Samsung
+- Low battery causes throttling — charge the phone for best speed
+- Duplicate follow-up prompts in tutor pipeline (minor polish issue)
+
+---
+
+## 9. Additional changes after initial build
+
+### 2.11 Ollama Engine (optional)
+**Commit:** `0e9fbf2`
+- Added `OllamaEngine` that connects to local Ollama server at `localhost:11434`
+- Added `network_security_config.xml` for localhost HTTP access
+- Added `http` package dependency
+- Currently not the default engine — available as a future option
+- File: `lib/ai_core/inference/ollama_engine.dart`
+
+### 2.12 FlutterGemma.initialize() in main
+**Commit:** `f8b8f89`
+- Required by flutter_gemma 1.0.2 before any plugin usage
+- Registers `MediaPipeEngine()` for `.task`/`.bin` model files
+- File: `lib/main.dart`
+
+### 2.13 Fix response.token extraction
+**Commit:** `a545640`
+- `response.toString()` returned `TextResponse("word")` as raw text
+- Fixed to use `response.token` for clean text output
+- File: `lib/ai_core/inference/litert_lm_engine.dart`
+
+### 2.14 ModelGate restored on Learn route
+**Commit:** `e1701b7`
+- Removed and re-added multiple times during debugging
+- Final state: ModelGate wraps Learn route to show install screen
+- Engine provider checks model status, falls back to MockEngine
+- Files: `lib/core/router/app_router.dart`, `lib/ai_core/providers/ai_provider.dart`
+
+### 2.15 Engine factory reverted to LiteRT primary
+**Commit:** `213247a`
+- Ollama was temporarily set as primary engine, causing errors on Practice/Create
+- Reverted to LiteRtLmEngineImpl (Android) / LlamaCppEngineImpl (desktop)
+- File: `lib/ai_core/inference/inference_engine.dart`
+
+### 2.16 Remove Guest Demo badge and Sign in button
+**Commit:** `9549da7`
+- Removed "Guest Demo" badge and "Sign in" button from home app bar
+- Clean app bar with just the logo
+- File: `lib/features/home/home_screen.dart`
+
+---
+
+## 10. Known State (final)
 
 - APK builds and deploys automatically on push to `main`
 - Dark theme is the default
-- Mock engine provides placeholder responses when no AI model is installed
-- Mock responses are user-friendly (no dev jargon)
+- **Gemma 2 2B GPU model runs on-device** with real AI responses
+- MockEngine provides clean fallback when no model is installed
 - Engine badge chip is hidden in release builds
 - fllama has been fully removed — no NDK/CMake dependency
 - Onboarding flow: Name → Interests → Age/Grade → Learning Style
+- All action elements use indigo (#4F46E5) as the single accent color
+- Guest Demo badge and Sign in button removed
+- Text truncation fixed across all cards
+- Ollama engine available as optional alternative
+
+---
+
+## 11. Known Issues / Future Polish
+
+- Duplicate follow-up prompt in tutor pipeline responses
+- Some responses take 10-30 seconds (normal for on-device 2B model)
+- Onboarding text visibility could use further dark mode testing
+- Practice/Create/Teach screens still have some hardcoded light-mode colors
