@@ -1,14 +1,13 @@
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'inference_engine.dart';
 
-/// Android engine — Google LiteRT-LM runtime via flutter_gemma 0.4.x.
+/// Android engine — Google LiteRT-LM runtime via flutter_gemma 1.x.
 /// Runs Gemma 3 1B entirely on-device (GPU delegate when available).
 class LiteRtLmEngineImpl extends InferenceEngine {
-  final _plugin = FlutterGemmaPlugin.instance;
-  bool _ready = false;
+  InferenceModel? _model;
 
   @override
-  bool get isReady => _ready;
+  bool get isReady => _model != null;
 
   @override
   String get backendLabel => 'LiteRT-LM · Gemma 3 1B';
@@ -16,14 +15,13 @@ class LiteRtLmEngineImpl extends InferenceEngine {
   @override
   Future<void> loadModel(String modelPath) async {
     try {
-      await _plugin.loadAssetModel(fullPath: modelPath);
-      await _plugin.init(
-        maxTokens: 512,
-        temperature: 0.7,
-        topK: 40,
-        randomSeed: 42,
-      );
-      _ready = true;
+      final installed = await FlutterGemma.isModelInstalled('gemma');
+      if (!installed) {
+        await FlutterGemma.installModel(
+          modelType: ModelType.gemmaIt,
+        ).fromFile(modelPath).install();
+      }
+      _model = await FlutterGemma.getActiveModel(maxTokens: 512);
     } catch (e) {
       throw ModelLoadException('LiteRT-LM failed to load "$modelPath": $e');
     }
@@ -36,13 +34,19 @@ class LiteRtLmEngineImpl extends InferenceEngine {
     double temperature = 0.7,
     TokenCallback? onToken,
   }) async {
-    if (!_ready) throw StateError('Model not loaded. Call loadModel() first.');
+    if (_model == null) {
+      throw StateError('Model not loaded. Call loadModel() first.');
+    }
+
+    final chat = await _model!.createChat(maxOutputTokens: maxTokens);
+    chat.addQueryChunk(Message.humanText(prompt));
 
     final buffer = StringBuffer();
-    await for (final token in _plugin.getResponseAsync(prompt: prompt)) {
-      if (token != null && token.isNotEmpty) {
-        buffer.write(token);
-        onToken?.call(token);
+    await for (final response in chat.generateChatResponseAsync()) {
+      final content = response.toString();
+      if (content.isNotEmpty) {
+        buffer.write(content);
+        onToken?.call(content);
       }
     }
     return buffer.toString();
@@ -50,7 +54,7 @@ class LiteRtLmEngineImpl extends InferenceEngine {
 
   @override
   Future<void> dispose() async {
-    await _plugin.close();
-    _ready = false;
+    _model?.close();
+    _model = null;
   }
 }
