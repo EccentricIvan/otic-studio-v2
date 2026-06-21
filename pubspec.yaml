@@ -16,6 +16,7 @@ dependencies:
 
   # AI inference — Android: LiteRT-LM (Gemma), Desktop: llama.cpp via FFI
   flutter_gemma: ^1.0.2
+  flutter_gemma_mediapipe: ^1.0.0
   ffi: ^2.1.0
 
   # Local storage — student memory, history summaries
