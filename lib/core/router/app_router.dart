@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app.dart';
 import '../../db/providers/db_provider.dart';
 import '../../features/achievements/achievements_screen.dart';
 import '../../features/admin/admin_screen.dart';
@@ -49,7 +48,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
           GoRoute(path: '/learn', builder: (_, state) {
             final topic = state.uri.queryParameters['topic'];
-            return ModelGate(child: LearnScreen(initialTopic: topic));
+            return LearnScreen(initialTopic: topic);
           }),
           GoRoute(
             path: '/path/:topic',
