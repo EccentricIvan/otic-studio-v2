@@ -364,7 +364,20 @@ class _SetupView extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 12),
+            if (state.projectType.isEmpty || state.topic.trim().isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  state.projectType.isEmpty
+                      ? 'Pick a project type above to get started'
+                      : 'Enter a topic to get started',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textHint,
+                  ),
+                ),
+              ),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(

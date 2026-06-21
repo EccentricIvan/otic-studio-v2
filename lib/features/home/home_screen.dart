@@ -142,7 +142,7 @@ class _HeroSection extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Your offline AI mentor — always available, always patient, no internet needed.',
+          'Your AI mentor — always available, always patient, always learning with you.',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 20),
