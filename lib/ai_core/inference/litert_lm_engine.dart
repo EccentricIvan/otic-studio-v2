@@ -16,9 +16,9 @@ class LiteRtLmEngineImpl extends InferenceEngine {
   @override
   Future<void> loadModel(String modelPath) async {
     try {
-      // Load model from local file path (USB-transferred .bin file)
-      await _plugin.loadAssetModel(fullPath: modelPath);
-      // Initialise inference with sensible defaults
+      await FlutterGemma.installModel(
+        modelType: ModelType.gemmaIt,
+      ).fromFile(modelPath).install();
       await _plugin.init(
         maxTokens: 512,
         temperature: 0.7,
