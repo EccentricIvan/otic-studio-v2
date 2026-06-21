@@ -102,7 +102,6 @@ final appRouter = GoRouter(
         GoRoute(path: '/certificates', builder: (_, __) => const CertificatesScreen()),
         GoRoute(path: '/collaborate', builder: (_, __) => const CollaborateScreen()),
         GoRoute(path: '/teacher', builder: (_, __) => const TeacherScreen()),
-        GoRoute(path: '/llama-test', builder: (_, __) => const LlamaTestScreen()),
         GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
       ],
     ),
