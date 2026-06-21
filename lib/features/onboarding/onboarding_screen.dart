@@ -66,13 +66,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFFFFFBEB), Color(0xFFF8FAFC), Color(0xFFEFF6FF)],
+            colors: isDark
+                ? const [Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF0F172A)]
+                : const [Color(0xFFFFFBEB), Color(0xFFF8FAFC), Color(0xFFEFF6FF)],
           ),
         ),
         child: SafeArea(
@@ -93,7 +96,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       decoration: BoxDecoration(
                         color: _page == i
                             ? AppColors.primary
-                            : AppColors.border,
+                            : Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -184,7 +187,7 @@ class _NamePage extends StatelessWidget {
           const SizedBox(height: 6),
           const Text(
             'Your personal offline AI tutor. Everything stays on this device — no internet ever.',
-            style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.5),
           ),
           const SizedBox(height: 24),
           Text(
@@ -242,7 +245,7 @@ class _AgePage extends StatelessWidget {
           const SizedBox(height: 6),
           const Text(
             'This helps the AI tutor explain things at the right level. You can skip.',
-            style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.5),
           ),
           const SizedBox(height: 20),
           Text(
@@ -281,7 +284,7 @@ class _AgePage extends StatelessWidget {
                     onSelected: (_) => onGrade(grade == g ? null : g),
                     selectedColor: AppColors.primary.withValues(alpha: 0.12),
                     side: BorderSide(
-                      color: grade == g ? AppColors.primary : AppColors.border,
+                      color: grade == g ? AppColors.primary : Theme.of(context).dividerColor,
                     ),
                   ),
                 )
@@ -335,7 +338,7 @@ class _InterestsPage extends StatelessWidget {
                 const SizedBox(height: 6),
                 const Text(
                   'Pick as many as you like. Otic will personalise your paths.',
-                  style: TextStyle(color: AppColors.textSecondary, height: 1.6),
+                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.6),
                 ),
               ],
             ),
@@ -384,7 +387,7 @@ class _InterestsPage extends StatelessWidget {
                             fontWeight: isSelected
                                 ? FontWeight.w600
                                 : FontWeight.normal,
-                            color: isSelected ? color : AppColors.textSecondary,
+                            color: isSelected ? color : Theme.of(context).textTheme.bodyMedium?.color,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -444,7 +447,7 @@ class _StylePage extends StatelessWidget {
           const SizedBox(height: 6),
           const Text(
             'The AI tutor adapts its teaching style to suit you.',
-            style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.5),
           ),
           const SizedBox(height: 20),
           ..._styles.map((s) {
@@ -458,10 +461,10 @@ class _StylePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primary.withValues(alpha: 0.08)
-                      : AppColors.surface,
+                      : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: isSelected ? AppColors.primary : AppColors.border,
+                    color: isSelected ? AppColors.primary : Theme.of(context).dividerColor,
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -471,7 +474,7 @@ class _StylePage extends StatelessWidget {
                       s.$2,
                       color: isSelected
                           ? AppColors.primary
-                          : AppColors.textSecondary,
+                          : Theme.of(context).textTheme.bodyMedium?.color,
                       size: 28,
                     ),
                     const SizedBox(width: 16),
@@ -485,7 +488,7 @@ class _StylePage extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: isSelected
                                   ? AppColors.primary
-                                  : AppColors.textPrimary,
+                                  : Theme.of(context).textTheme.bodyLarge?.color,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -493,7 +496,7 @@ class _StylePage extends StatelessWidget {
                             s.$4,
                             style: const TextStyle(
                               fontSize: 13,
-                              color: AppColors.textSecondary,
+                              color: Theme.of(context).textTheme.bodyMedium?.color,
                             ),
                           ),
                         ],
