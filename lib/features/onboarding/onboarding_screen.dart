@@ -185,7 +185,7 @@ class _NamePage extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'Your personal offline AI tutor. Everything stays on this device — no internet ever.',
             style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.5),
           ),
@@ -243,7 +243,7 @@ class _AgePage extends StatelessWidget {
           const SizedBox(height: 12),
           Text('About you', style: Theme.of(context).textTheme.headlineLarge),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'This helps the AI tutor explain things at the right level. You can skip.',
             style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.5),
           ),
@@ -336,7 +336,7 @@ class _InterestsPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   'Pick as many as you like. Otic will personalise your paths.',
                   style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.6),
                 ),
@@ -445,7 +445,7 @@ class _StylePage extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'The AI tutor adapts its teaching style to suit you.',
             style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, height: 1.5),
           ),
