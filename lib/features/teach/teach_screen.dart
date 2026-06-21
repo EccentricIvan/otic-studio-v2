@@ -296,7 +296,7 @@ class _TeachScreenState extends ConsumerState<TeachScreen> {
                           icon: const Icon(Icons.send),
                           label: const Text('Submit for scoring'),
                           style: FilledButton.styleFrom(
-                            backgroundColor: AppColors.teachColor,
+                            backgroundColor: AppColors.primary,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
                         ),
@@ -327,7 +327,7 @@ class _TeachScreenState extends ConsumerState<TeachScreen> {
                         icon: const Icon(Icons.topic),
                         label: const Text('New topic'),
                         style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.teachColor,
+                          backgroundColor: AppColors.primary,
                         ),
                       ),
                     ),
@@ -537,15 +537,15 @@ class _TopicChips extends StatelessWidget {
           label: Text(t),
           selected: sel,
           onSelected: (_) => onSelect(t),
-          selectedColor: AppColors.teachColor.withValues(alpha: 0.12),
+          selectedColor: AppColors.primary.withValues(alpha: 0.12),
           side: BorderSide(
-            color: sel ? AppColors.teachColor : AppColors.border,
+            color: sel ? AppColors.primary : AppColors.border,
           ),
           labelStyle: TextStyle(
-            color: sel ? AppColors.teachColor : AppColors.textSecondary,
+            color: sel ? AppColors.primary : AppColors.textSecondary,
             fontWeight: sel ? FontWeight.w600 : FontWeight.w400,
           ),
-          checkmarkColor: AppColors.teachColor,
+          checkmarkColor: AppColors.primary,
         );
       }).toList(),
     );

@@ -385,7 +385,7 @@ class _GeneratingView extends ConsumerWidget {
               icon: const Icon(Icons.auto_awesome),
               label: const Text('Generate my path'),
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.learnColor,
+                backgroundColor: AppColors.primary,
               ),
             ),
             const SizedBox(height: 12),

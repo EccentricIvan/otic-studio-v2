@@ -206,7 +206,7 @@ class _EmptyProjects extends StatelessWidget {
               icon: const Icon(Icons.add),
               label: const Text('Start a project'),
               style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.createColor),
+                  backgroundColor: AppColors.primary),
             ),
           ],
         ),

@@ -42,8 +42,8 @@ class PracticeScreen extends StatelessWidget {
               Tab(icon: Icon(Icons.quiz_outlined), text: 'Practice'),
               Tab(icon: Icon(Icons.explore_outlined), text: 'Apply'),
             ],
-            indicatorColor: AppColors.practiceColor,
-            labelColor: AppColors.practiceColor,
+            indicatorColor: AppColors.primary,
+            labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.textSecondary,
           ),
         ),
@@ -148,7 +148,7 @@ class _PracticeTab extends ConsumerWidget {
         children: [
           _TopicPicker(
             selected: state.topic,
-            color: AppColors.practiceColor,
+            color: AppColors.primary,
             onSelect: (t) {
               ref.read(practiceProvider.notifier).setTopic(t);
             },
@@ -159,7 +159,7 @@ class _PracticeTab extends ConsumerWidget {
               !state.isGenerating)
             _StartCard(
               topic: state.topic,
-              color: AppColors.practiceColor,
+              color: AppColors.primary,
               icon: Icons.quiz,
               label: 'Generate exercise',
               onTap: () => ref.read(practiceProvider.notifier).generate(),
@@ -220,14 +220,14 @@ class _ExerciseCard extends StatelessWidget {
                 const Icon(
                   Icons.stars,
                   size: 16,
-                  color: AppColors.practiceColor,
+                  color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'Score: ${state.score}/${state.total}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.practiceColor,
+                    color: AppColors.primary,
                   ),
                 ),
                 const Spacer(),
@@ -331,7 +331,7 @@ class _ExerciseCard extends StatelessWidget {
                 icon: const Icon(Icons.arrow_forward),
                 label: const Text('Next question'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.practiceColor,
+                  backgroundColor: AppColors.primary,
                 ),
               ),
             ),
@@ -376,9 +376,9 @@ class _OptionButton extends StatelessWidget {
         textColor = Colors.red;
       }
     } else if (index == state.selectedOption) {
-      borderColor = AppColors.practiceColor;
-      bgColor = AppColors.practiceColor.withValues(alpha: 0.07);
-      textColor = AppColors.practiceColor;
+      borderColor = AppColors.primary;
+      bgColor = AppColors.primary.withValues(alpha: 0.07);
+      textColor = AppColors.primary;
     }
 
     return GestureDetector(
@@ -462,7 +462,7 @@ class _ApplyTabState extends ConsumerState<_ApplyTab> {
         children: [
           _TopicPicker(
             selected: state.topic,
-            color: AppColors.createColor,
+            color: AppColors.primary,
             onSelect: (t) {
               ref.read(applyProvider.notifier).setTopic(t);
             },
@@ -474,7 +474,7 @@ class _ApplyTabState extends ConsumerState<_ApplyTab> {
               !state.isGeneratingScenario)
             _StartCard(
               topic: state.topic,
-              color: AppColors.createColor,
+              color: AppColors.primary,
               icon: Icons.explore,
               label: 'Give me a scenario',
               onTap: () => ref.read(applyProvider.notifier).generateScenario(),
@@ -536,10 +536,10 @@ class _ScenarioCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: AppColors.createColor.withValues(alpha: 0.06),
+              color: AppColors.primary.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: AppColors.createColor.withValues(alpha: 0.2),
+                color: AppColors.primary.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -550,7 +550,7 @@ class _ScenarioCard extends StatelessWidget {
                     Icon(
                       Icons.place,
                       size: 15,
-                      color: AppColors.createColor.withValues(alpha: 0.8),
+                      color: AppColors.primary.withValues(alpha: 0.8),
                     ),
                     const SizedBox(width: 6),
                     const Text(
@@ -559,7 +559,7 @@ class _ScenarioCard extends StatelessWidget {
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.8,
-                        color: AppColors.createColor,
+                        color: AppColors.primary,
                       ),
                     ),
                   ],
@@ -611,7 +611,7 @@ class _ScenarioCard extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
-                    color: AppColors.createColor,
+                    color: AppColors.primary,
                     width: 2,
                   ),
                 ),
@@ -634,7 +634,7 @@ class _ScenarioCard extends StatelessWidget {
                       icon: const Icon(Icons.send),
                       label: const Text('Submit my response'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.createColor,
+                        backgroundColor: AppColors.primary,
                       ),
                     ),
             ),
@@ -657,14 +657,14 @@ class _ScenarioCard extends StatelessWidget {
                       Icon(
                         Icons.lightbulb,
                         size: 16,
-                        color: AppColors.createColor,
+                        color: AppColors.primary,
                       ),
                       SizedBox(width: 8),
                       Text(
                         'AI Feedback',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          color: AppColors.createColor,
+                          color: AppColors.primary,
                         ),
                       ),
                     ],
@@ -688,7 +688,7 @@ class _ScenarioCard extends StatelessWidget {
                 icon: const Icon(Icons.refresh),
                 label: const Text('New scenario'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.createColor,
+                  backgroundColor: AppColors.primary,
                 ),
               ),
             ),

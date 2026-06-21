@@ -312,12 +312,12 @@ class _SetupView extends ConsumerWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: selected
-                          ? AppColors.createColor.withValues(alpha: 0.1)
+                          ? AppColors.primary.withValues(alpha: 0.1)
                           : AppColors.surfaceVariant,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: selected
-                            ? AppColors.createColor
+                            ? AppColors.primary
                             : AppColors.border,
                         width: selected ? 2 : 1,
                       ),
@@ -329,7 +329,7 @@ class _SetupView extends ConsumerWidget {
                           pt.icon,
                           size: 18,
                           color: selected
-                              ? AppColors.createColor
+                              ? AppColors.primary
                               : AppColors.textSecondary,
                         ),
                         const SizedBox(width: 8),
@@ -340,7 +340,7 @@ class _SetupView extends ConsumerWidget {
                               fontWeight: FontWeight.w500,
                               fontSize: 13,
                               color: selected
-                                  ? AppColors.createColor
+                                  ? AppColors.primary
                                   : AppColors.textPrimary,
                             ),
                           ),
@@ -376,7 +376,7 @@ class _SetupView extends ConsumerWidget {
                 icon: const Icon(Icons.auto_awesome),
                 label: const Text('Start creating'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.createColor,
+                  backgroundColor: AppColors.primary,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
               ),
@@ -492,7 +492,7 @@ class _Bubble extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isUser ? AppColors.createColor : AppColors.surface,
+          color: isUser ? AppColors.primary : AppColors.surface,
           borderRadius: BorderRadius.circular(14),
           border: isUser ? null : Border.all(color: AppColors.border),
         ),
@@ -575,7 +575,7 @@ class _InputBar extends StatelessWidget {
                   },
                   icon: const Icon(Icons.arrow_upward),
                   style: IconButton.styleFrom(
-                    backgroundColor: AppColors.createColor,
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                   ),
                 ),
