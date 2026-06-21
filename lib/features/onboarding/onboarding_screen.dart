@@ -494,7 +494,7 @@ class _StylePage extends StatelessWidget {
                           const SizedBox(height: 2),
                           Text(
                             s.$4,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
                               color: Theme.of(context).textTheme.bodyMedium?.color,
                             ),
