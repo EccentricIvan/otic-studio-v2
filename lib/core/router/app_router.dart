@@ -86,7 +86,7 @@ final appRouter = GoRouter(
         GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
         GoRoute(path: '/learn', builder: (_, state) {
           final topic = state.uri.queryParameters['topic'];
-          return ModelGate(child: LearnScreen(initialTopic: topic));
+          return LearnScreen(initialTopic: topic);
         }),
         GoRoute(
           path: '/path/:topic',

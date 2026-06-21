@@ -39,7 +39,7 @@ class LiteRtLmEngineImpl extends InferenceEngine {
     }
 
     final chat = await _model!.createChat(maxOutputTokens: maxTokens);
-    chat.addQueryChunk(Message.humanText(prompt));
+    chat.addQueryChunk(Message.text(text: prompt, isUser: true));
 
     final buffer = StringBuffer();
     await for (final response in chat.generateChatResponseAsync()) {
