@@ -168,30 +168,30 @@ class _NamePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Image.asset(
             'assets/branding/otic_logo.png',
-            width: 88,
-            height: 88,
+            width: 64,
+            height: 64,
             fit: BoxFit.contain,
             semanticLabel: 'Logo',
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Text(
             'Welcome to Otic Studio',
             style: Theme.of(context).textTheme.headlineLarge,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           const Text(
             'Your personal offline AI tutor. Everything stays on this device — no internet ever.',
-            style: TextStyle(color: AppColors.textSecondary, height: 1.6),
+            style: TextStyle(color: AppColors.textSecondary, height: 1.5),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 24),
           Text(
             "What's your name?",
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           TextField(
             controller: controller,
             autofocus: true,
@@ -237,19 +237,19 @@ class _AgePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text('About you', style: Theme.of(context).textTheme.headlineLarge),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           const Text(
             'This helps the AI tutor explain things at the right level. You can skip.',
-            style: TextStyle(color: AppColors.textSecondary, height: 1.6),
+            style: TextStyle(color: AppColors.textSecondary, height: 1.5),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 20),
           Text(
             'How old are you?',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           DropdownButtonFormField<int>(
             initialValue: age,
             decoration: const InputDecoration(
@@ -322,7 +322,7 @@ class _InterestsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
@@ -332,7 +332,7 @@ class _InterestsPage extends StatelessWidget {
                   'What topics interest you?',
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 const Text(
                   'Pick as many as you like. Otic will personalise your paths.',
                   style: TextStyle(color: AppColors.textSecondary, height: 1.6),
@@ -340,7 +340,7 @@ class _InterestsPage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Expanded(
             child: GridView.count(
               crossAxisCount: 3,
@@ -436,17 +436,17 @@ class _StylePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             'How do you learn best?',
             style: Theme.of(context).textTheme.headlineLarge,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           const Text(
             'The AI tutor adapts its teaching style to suit you.',
-            style: TextStyle(color: AppColors.textSecondary, height: 1.6),
+            style: TextStyle(color: AppColors.textSecondary, height: 1.5),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 20),
           ..._styles.map((s) {
             final isSelected = selected == s.$1;
             return GestureDetector(

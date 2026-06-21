@@ -40,7 +40,7 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
@@ -49,17 +49,16 @@ class HomeScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _HeroSection(),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
                 const SectionHeader(
                   title: 'Start Learning',
                   subtitle: 'Choose how you want to learn today',
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _LearningModesGrid(),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
                 const _RecommendedSection(),
-                const SizedBox(height: 48),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -136,17 +135,17 @@ class _HeroSection extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 18),
-        Text(
-          'Learn anything,\nanywhere',
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
         const SizedBox(height: 14),
         Text(
-          'Your offline AI mentor — always available, always patient,\nno internet needed.',
+          'Learn anything, anywhere',
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Your offline AI mentor — always available, always patient, no internet needed.',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         VoiceAskWidget(
           onSubmit: (query) {
             context.go('/learn?topic=${Uri.encodeComponent(query)}');
