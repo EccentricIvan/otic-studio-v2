@@ -43,10 +43,12 @@ class LiteRtLmEngineImpl extends InferenceEngine {
 
     final buffer = StringBuffer();
     await for (final response in chat.generateChatResponseAsync()) {
-      final content = response.toString();
-      if (content.isNotEmpty) {
-        buffer.write(content);
-        onToken?.call(content);
+      if (response is TextResponse) {
+        final token = response.token;
+        if (token != null && token.isNotEmpty) {
+          buffer.write(token);
+          onToken?.call(token);
+        }
       }
     }
     return buffer.toString();
