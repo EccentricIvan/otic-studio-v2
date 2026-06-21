@@ -91,39 +91,36 @@ class _TopicPicker extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 12),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
           child: Text(
             'Choose a topic',
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
         ),
-        SizedBox(
-          height: 42,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: allTopics.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
-            itemBuilder: (_, i) {
-              final topic = allTopics[i];
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: allTopics.map((topic) {
               final isSelected = selected == topic;
               return ChoiceChip(
                 label: Text(topic),
                 selected: isSelected,
                 onSelected: (_) => onSelect(topic),
                 selectedColor: color.withValues(alpha: 0.15),
-                side: BorderSide(color: isSelected ? color : AppColors.border),
+                side: BorderSide(color: isSelected ? color : Theme.of(context).dividerColor),
                 labelStyle: TextStyle(
-                  color: isSelected ? color : AppColors.textSecondary,
+                  color: isSelected ? color : Theme.of(context).textTheme.bodyMedium?.color,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 ),
                 checkmarkColor: color,
               );
-            },
+            }).toList(),
           ),
         ),
       ],

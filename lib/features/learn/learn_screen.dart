@@ -560,10 +560,10 @@ class _EmptyState extends StatelessWidget {
             children: _starters
                 .map(
                   (s) => ActionChip(
-                    label: Text(s),
+                    label: Text(s, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
                     onPressed: () => onTopic(s),
-                    backgroundColor: AppColors.surfaceVariant,
-                    side: const BorderSide(color: AppColors.border),
+                    backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    side: BorderSide(color: Theme.of(context).dividerColor),
                   ),
                 )
                 .toList(),

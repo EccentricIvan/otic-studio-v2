@@ -72,29 +72,15 @@ class _VoiceAskWidgetState extends State<VoiceAskWidget> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    IconButton.filled(
-                      onPressed: () {
-                        // TODO: wire up offline STT (Vosk)
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Voice input — offline STT coming soon',
-                            ),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.mic, size: 18),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(40, 40),
-                      ),
-                      tooltip: 'Voice input',
-                    ),
-                  ],
+                child: IconButton.filled(
+                  onPressed: _submit,
+                  icon: const Icon(Icons.arrow_upward, size: 18),
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(40, 40),
+                  ),
+                  tooltip: 'Send',
                 ),
               ),
             ],
