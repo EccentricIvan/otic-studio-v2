@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
-import 'ollama_engine.dart';
+import 'litert_lm_engine.dart';
 import 'llama_cpp_engine.dart';
 
 /// Token-by-token streaming callback.
 typedef TokenCallback = void Function(String token);
 
 /// Unified interface for all local inference backends.
-/// - Android/Desktop → OllamaEngine (local Ollama server)
-/// - Desktop fallback → LlamaCppEngineImpl (llama.cpp via dart:ffi)
-/// - Dev/Test        → MockEngine (instant canned responses)
+/// - Android      → LiteRtLmEngineImpl (flutter_gemma / MediaPipe)
+/// - Windows/Linux → LlamaCppEngineImpl (llama.cpp via dart:ffi)
+/// - Dev/Test     → MockEngine (instant canned responses)
 abstract class InferenceEngine {
   bool get isReady;
   String get backendLabel;
@@ -36,7 +36,9 @@ class ModelLoadException implements Exception {
 }
 
 /// Returns the correct engine for the current platform.
-/// Tries Ollama first (works on any platform), falls back to platform-specific.
 InferenceEngine createPlatformEngine() {
-  return OllamaEngine();
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    return LiteRtLmEngineImpl();
+  }
+  return LlamaCppEngineImpl();
 }
