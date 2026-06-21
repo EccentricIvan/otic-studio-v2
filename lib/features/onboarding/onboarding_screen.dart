@@ -107,12 +107,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   onPageChanged: (i) => setState(() => _page = i),
                   children: [
                     _NamePage(controller: _nameController),
-                    _AgePage(
-                      age: _age,
-                      grade: _grade,
-                      onAge: (v) => setState(() => _age = v),
-                      onGrade: (v) => setState(() => _grade = v),
-                    ),
                     _InterestsPage(
                       selected: _interests,
                       onToggle: (s) => setState(
@@ -120,6 +114,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             ? _interests.remove(s)
                             : _interests.add(s),
                       ),
+                    ),
+                    _AgePage(
+                      age: _age,
+                      grade: _grade,
+                      onAge: (v) => setState(() => _age = v),
+                      onGrade: (v) => setState(() => _grade = v),
                     ),
                     _StylePage(
                       selected: _learningStyle,
